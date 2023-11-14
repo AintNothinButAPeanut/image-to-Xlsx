@@ -29,6 +29,7 @@ public class PythonMapper extends Thread {
     private final File[] pictures;
     private final ProcessBuilder pb;
     private final File directoryWithPictures;
+    private final File workingDirectory = new File(System.getenv("HOME") + "/ITE");
     Logger logger = LoggerFactory.getLogger(PythonMapper.class);
     @Value("${ite.processedDir}")
     private String iteProcessedDir;
@@ -36,7 +37,7 @@ public class PythonMapper extends Thread {
     public PythonMapper(String dirToBeProcessed) {
         pb = new ProcessBuilder();
         this.directoryWithPictures = new File(dirToBeProcessed);
-        pb.directory(this.directoryWithPictures);
+        pb.directory(this.workingDirectory);
         this.pictures = directoryWithPictures.listFiles();
         this.setName("PythonThread@" + this.hashCode() + " --- " + "Started on " + new Date());
         this.setDaemon(false);
@@ -55,9 +56,9 @@ public class PythonMapper extends Thread {
     }
 
     private void runPython() {
-        pb.command("/bin/sh", "-c", String.format("python pythonmapper.py %s", pictures[0].getParent()));
+        pb.command("/bin/sh", "-c", String.format("python python_mapper.py %s", pictures[0].getParent()));
         try {
-            pb.start().waitFor(30, TimeUnit.SECONDS);
+            pb.start().waitFor(60, TimeUnit.SECONDS);
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
