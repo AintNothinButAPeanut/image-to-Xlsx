@@ -4,6 +4,9 @@ import org.narcissus.services.web.UploadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
@@ -15,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Collection;
 
 @Controller
@@ -23,6 +27,9 @@ public class UploadController {
 
     Logger logger = LoggerFactory.getLogger(UploadController.class);
     private UploadService uploadService;
+
+    @Value("${ite.excelsDir}")
+    private String iteExcel;
 
     @Autowired
     public void setUploadService(UploadService uploadService) {
@@ -38,9 +45,23 @@ public class UploadController {
         } catch (IOException exception) {
             logger.debug("Failed to upload files to the server storage.");
         }
-        ResponseEntity responseEntity = null;
-        File excelFile = new File("");
 
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("mimetype", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+
+        File[] excelFiles = new File(iteExcel).listFiles();
+        byte[] fileContent = new byte[0];
+
+        try {
+            fileContent = Files.readAllBytes(excelFiles[0].toPath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        ResponseEntity responseEntity = new ResponseEntity(
+                fileContent,
+                responseHeaders,
+                HttpStatus.OK
+        );
 
         return responseEntity;
     }

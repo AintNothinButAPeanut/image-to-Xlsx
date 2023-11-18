@@ -56,7 +56,10 @@ public class PythonMapper extends Thread {
     }
 
     private void runPython() {
-        pb.command("/bin/sh", "-c", String.format("python python_mapper.py %s", pictures[0].getParent()));
+        pb.command(
+                "/bin/sh",
+                "-c",
+                String.format("python3 python_mapper.py %s", pictures[0].getParent())); //python3 python_mapper.py /home/ITE/OCR/somedirectory
         try {
             pb.start().waitFor(60, TimeUnit.SECONDS);
         } catch (IOException | InterruptedException e) {
