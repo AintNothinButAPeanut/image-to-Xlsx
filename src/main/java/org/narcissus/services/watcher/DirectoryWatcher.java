@@ -71,9 +71,9 @@ public class DirectoryWatcher implements CommandLineRunner {
 //                }
 
             case "ENTRY_DELETE":
-                //TODO implement logic
+                //TODO implement delete logic
             case "ENTRY_MODIFY":
-                //TODO implement logic
+                //TODO implement modify logic
             case "OVERFLOW":
                 //For some reason overflow even is always active. Do not thor exceptions here otherwise crashes are inevitable
             default:

@@ -76,5 +76,5 @@ for i in range(len(eachFileImage)):
     ws.add_image(img, 'B' + str(i + 1))
 
 # Works
-FileName = "ImageToExcel" + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + ".xlsx"
-wb.save(FileName)
+fileName = "ImageToExcel" + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + ".xlsx"
+wb.save("/home/user/ITE/Excels/" + fileName)

@@ -5,8 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
@@ -38,16 +37,13 @@ public class UploadController {
 
     @PostMapping("/upload")
     public ResponseEntity<?> upload(Model model, @NonNull @RequestParam("fileInput") Collection<MultipartFile> files) {
-        logger.debug("/upload controller called");
-        try {
-            if (!files.isEmpty())
-                uploadService.uploadFiles(files);
-        } catch (IOException exception) {
-            logger.debug("Failed to upload files to the server storage.");
-        }
-
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("mimetype", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+//        logger.debug("/upload controller called");
+//        try {
+//            if (!files.isEmpty())
+//                uploadService.uploadFiles(files);
+//        } catch (IOException exception) {
+//            logger.debug("Failed to upload files to the server storage.");
+//        }
 
         File[] excelFiles = new File(iteExcel).listFiles();
         byte[] fileContent = new byte[0];
@@ -57,14 +53,11 @@ public class UploadController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        ResponseEntity responseEntity = new ResponseEntity(
-                fileContent,
-                responseHeaders,
-                HttpStatus.OK
-        );
 
-        return responseEntity;
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(fileContent);
+
     }
-
 
 }
