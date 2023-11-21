@@ -12,6 +12,8 @@ I needed a pet project I would be interested in so there it is.
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;├── /OCR <br>
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;├── /upload <br>
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;├── /Excels <br>
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;├── /python_mapper.py <br>
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;├── /rus.traineddata <br>
 </li>
 <li>Make sure the server has JVM version 17+</li>
 <li>Make sure the server has Python3 with following packages: 
