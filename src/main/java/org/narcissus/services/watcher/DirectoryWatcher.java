@@ -1,6 +1,7 @@
 package org.narcissus.services.watcher;
 
 import org.narcissus.exceptions.ITEDirectoryWatcherException;
+import org.narcissus.services.OCR.ITEProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,12 +16,12 @@ import java.util.List;
 public class DirectoryWatcher implements CommandLineRunner {
 
     Logger logger = LoggerFactory.getLogger(DirectoryWatcher.class);
-    @Value("${linux.home}")
-    private String homeDir;
-    @Value("${ite.OCRDir}")
-    private String iteOcrDir;
+
     @Value("${ite.uploadsDir}")
     private String iteUploadDir;
+
+    @Value("${ite.OCRDir}")
+    private String iteOCRDir;
     @Value("${ite.excelsDir}")
     private String iteExcelDir;
     private WatchService watchService;
@@ -37,7 +38,7 @@ public class DirectoryWatcher implements CommandLineRunner {
     @Override
     public void run(String... args) {
         try {
-            OCRDirKey = registerNewDirectoryWatcher(iteOcrDir, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE);
+            OCRDirKey = registerNewDirectoryWatcher(iteOCRDir, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE);
             ExcelDirKey = registerNewDirectoryWatcher(iteExcelDir, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE);
             List<WatchKey> dirKeys = List.of(OCRDirKey, ExcelDirKey);
 
@@ -58,26 +59,21 @@ public class DirectoryWatcher implements CommandLineRunner {
     }
 
     private void manageWatcherEvent(WatchEvent<?> event) {
-        //TODO THIS IS INCREDIBLY BAD. MUST adhere to this practices LATER https://proglib.io/p/monitoring-faylov-vmeste-s-java-nio-2020-01-25
-        //TODO also use switch enhanced lambda way
+        //Proper observer pattern https://proglib.io/p/monitoring-faylov-vmeste-s-java-nio-2020-01-25
         switch (event.kind().toString()) {
             case "ENTRY_CREATE":
 
-                System.out.println("entry create");
-
-//                if (event.context().toString().contains("ITE")) {
-//                    logger.info(event.context() + " directory is MOVED");
-//                    new PythonMapper(iteOcrDir + "/" + event.context());
-//                }
+                if (event.context().toString().contains("ITE")) {
+                    String identifier = event.context().toString();
+                    new ITEProcessor(iteOCRDir + "/" + event.context(), identifier);
+                }
 
             case "ENTRY_DELETE":
-                //TODO implement delete logic
+
             case "ENTRY_MODIFY":
-                //TODO implement modify logic
+
             case "OVERFLOW":
                 //For some reason overflow even is always active. Do not thor exceptions here otherwise crashes are inevitable
-            default:
-
         }
     }
 

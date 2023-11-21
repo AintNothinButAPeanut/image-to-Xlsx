@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 import static org.bytedeco.leptonica.global.leptonica.pixDestroy;
 import static org.bytedeco.leptonica.global.leptonica.pixRead;
 
-public class OCR extends Thread {
+public final class OCR extends Thread {
 
     private static final String iteHomeDir = "/home/user/ITE";
     private final TessBaseAPI api = new TessBaseAPI();
@@ -23,8 +23,8 @@ public class OCR extends Thread {
     public OCR(String picturePath) {
         this.picturePath = picturePath;
         this.txtPath = picturePath.substring(0, picturePath.lastIndexOf('.')) + ".txt";
-        this.setName("OCR" + this.hashCode());
-        this.setDaemon(false);
+        //this.setName("OCRThread@" + this.hashCode() + " --- " + "Started on " + new Date());
+        this.setDaemon(true);
         this.start();
     }
 
@@ -60,4 +60,13 @@ public class OCR extends Thread {
         pixDestroy(image);
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 }
