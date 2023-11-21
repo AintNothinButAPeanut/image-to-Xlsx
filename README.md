@@ -17,7 +17,7 @@ I needed a pet project I would be interested in so there it is.
 <li>Make sure the server has Python3 with following packages: 
 <ul>Pillow==10.1.0<br>openpyxl==3.1.2
 </ul>
-<li>Make sure the server has python3-pip (otherwise "sudo apt install python3-pip" in the /home/user/ITE directory)</li></li>
+<li>Make sure the server has python3-pip (otherwise "sudo apt install python3-pip")</li></li>
 <li>Make sure the TESSDATA_PREFIX environment variable is set to your "tessdata" directory</li>
 </ol>
 
