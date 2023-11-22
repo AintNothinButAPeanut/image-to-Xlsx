@@ -1,3 +1,11 @@
+<h2>Contributors</h2>
+
+<p style="text-align: center;">
+<a href = "https://github.com/narcissusTheFlower/image-to-Xlsx/graphs/contributors">
+  <img src = "https://contrib.rocks/image?repo=narcissusTheFlower/image-to-Xlsx"/>
+</a>
+</p>
+
 <h1>Images to .xlsx</h1> 
 <hr>
 <h2>Intentions</h2>
