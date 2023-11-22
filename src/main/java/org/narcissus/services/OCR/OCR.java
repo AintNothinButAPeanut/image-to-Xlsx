@@ -3,6 +3,8 @@ package org.narcissus.services.OCR;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.leptonica.PIX;
 import org.bytedeco.tesseract.TessBaseAPI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,6 +16,7 @@ import static org.bytedeco.leptonica.global.leptonica.pixRead;
 
 public final class OCR {
 
+    Logger logger = LoggerFactory.getLogger(OCR.class);
     private static final String iteHomeDir = "/home/user/ITE";
     private final TessBaseAPI api = new TessBaseAPI();
     private String picturePath;
@@ -21,11 +24,11 @@ public final class OCR {
     private BytePointer outText;
 
     public OCR(String picturePath) {
+        logger.info("Beginning processing pictures with Tesseract.");
         this.picturePath = picturePath;
         this.txtPath = picturePath.substring(0, picturePath.lastIndexOf('.')) + ".txt";
         run();
     }
-
 
     private void run() {
         if (api.Init(iteHomeDir, "rus") != 0) {

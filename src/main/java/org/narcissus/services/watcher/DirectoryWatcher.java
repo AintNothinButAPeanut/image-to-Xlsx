@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.List;
 
 @Component
 public class DirectoryWatcher implements CommandLineRunner {
@@ -19,13 +18,12 @@ public class DirectoryWatcher implements CommandLineRunner {
 
     @Value("${ite.uploadsDir}")
     private String iteUploadDir;
-
     @Value("${ite.OCRDir}")
     private String iteOCRDir;
     @Value("${ite.excelsDir}")
     private String iteExcelDir;
     private WatchService watchService;
-    private WatchKey OCRDirKey, ExcelDirKey;
+    private WatchKey OCRDirKey;
 
     public DirectoryWatcher() {
         try {
@@ -39,17 +37,12 @@ public class DirectoryWatcher implements CommandLineRunner {
     public void run(String... args) {
         try {
             OCRDirKey = registerNewDirectoryWatcher(iteOCRDir, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE);
-            ExcelDirKey = registerNewDirectoryWatcher(iteExcelDir, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE);
-            List<WatchKey> dirKeys = List.of(OCRDirKey, ExcelDirKey);
-
             logger.info("WatchService is up and running.");
 
-            for (WatchKey key : dirKeys) {
-                while ((key = watchService.take()) != null) {
+            while ((OCRDirKey = watchService.take()) != null) {
                     //512 events at a time at max
-                    key.pollEvents().forEach(this::manageWatcherEvent);
-                    key.reset();
-                }
+                OCRDirKey.pollEvents().forEach(this::manageWatcherEvent);
+                OCRDirKey.reset();
             }
 
             watchService.close();
@@ -62,7 +55,7 @@ public class DirectoryWatcher implements CommandLineRunner {
         //Proper observer pattern https://proglib.io/p/monitoring-faylov-vmeste-s-java-nio-2020-01-25
         switch (event.kind().toString()) {
             case "ENTRY_CREATE":
-
+                logger.info("Detected new directory.");
                 if (event.context().toString().contains("ITE")) {
                     String identifier = event.context().toString();
                     new ITEProcessor(iteOCRDir + "/" + event.context(), identifier);

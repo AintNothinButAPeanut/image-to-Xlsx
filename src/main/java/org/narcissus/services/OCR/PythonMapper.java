@@ -27,6 +27,7 @@ public final class PythonMapper {
     Logger logger = LoggerFactory.getLogger(PythonMapper.class);
 
     public PythonMapper(String sourceDir, String identifier) {
+        logger.info("Beginning processing of the directory with python script.");
         pb = new ProcessBuilder(
                 "python3",
                 "/home/" + linuxUserName + "/ITE/python_mapper.py",
