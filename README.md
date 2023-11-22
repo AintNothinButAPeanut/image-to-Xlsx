@@ -32,6 +32,13 @@ I needed a pet project I would be interested in so there it is.
 </ul></li>
 <li>Make sure the TESSDATA_PREFIX environment variable is set to /home/username. To do this on bash add "export TESSDATA_PREFIX=/home/username/ITE" line in "~/.profile"</li>
 </ol>
+<hr>
+<h2>Running .jar on the server</h2>
+```
+function test() {
+  console.log("notice the blank line before this function?");
+}
+```
 
 
 

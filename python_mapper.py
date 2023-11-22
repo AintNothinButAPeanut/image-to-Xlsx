@@ -1,8 +1,7 @@
 import os
 import sys
-from datetime import datetime
-
 from PIL import Image
+from datetime import datetime
 from openpyxl import Workbook
 from openpyxl.drawing.image import Image as OpenpyxlImage
 from openpyxl.styles import Alignment, Font
@@ -78,5 +77,5 @@ for i in range(len(eachFileImage)):
     ws.add_image(img, 'B' + str(i + 1))
 
 # Works
-fileName = "ITE-" + identifierForController + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + ".xlsx"
+fileName = identifierForController + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + ".xlsx"
 wb.save(targetDirectory + "/" + fileName)
