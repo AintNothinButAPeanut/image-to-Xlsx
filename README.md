@@ -34,7 +34,7 @@ I needed a pet project I would be interested in so there it is.
 </ol>
 <hr>
 <h2>2. Running .jar on the server</h2>
-After you ended up with a file structure denoted in step 1 in the "Reminder..." you can run downloaded .jar file as follows:<br>
+After you ended up with a file structure denoted in step 1 you can run downloaded .jar file as follows:<br>
 
 ```
 $ java -jar imageToExcel-majorVersion.minorVersion.jar
