@@ -8,8 +8,10 @@ from openpyxl.drawing.image import Image as OpenpyxlImage
 from openpyxl.styles import Alignment, Font
 
 # Get directory with files
-parentDirectory = sys.argv[1]
-directory = os.fsdecode(parentDirectory)
+sourceDirectory = sys.argv[1]
+targetDirectory = sys.argv[2]
+identifierForController = sys.argv[3]
+directory = os.fsdecode(sourceDirectory)
 filesCount = len(os.listdir(directory))
 pictureFileCount = 0
 
@@ -76,5 +78,5 @@ for i in range(len(eachFileImage)):
     ws.add_image(img, 'B' + str(i + 1))
 
 # Works
-FileName = "ImageToExcel" + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + ".xlsx"
-wb.save(FileName)
+fileName = "ITE-" + identifierForController + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + ".xlsx"
+wb.save(targetDirectory + "/" + fileName)

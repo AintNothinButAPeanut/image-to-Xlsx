@@ -3,6 +3,8 @@ package org.narcissus.services.OCR;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.leptonica.PIX;
 import org.bytedeco.tesseract.TessBaseAPI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -12,8 +14,9 @@ import java.nio.file.Paths;
 import static org.bytedeco.leptonica.global.leptonica.pixDestroy;
 import static org.bytedeco.leptonica.global.leptonica.pixRead;
 
-public class OCR extends Thread {
+public final class OCR {
 
+    Logger logger = LoggerFactory.getLogger(OCR.class);
     private static final String iteHomeDir = "/home/user/ITE";
     private final TessBaseAPI api = new TessBaseAPI();
     private String picturePath;
@@ -21,15 +24,13 @@ public class OCR extends Thread {
     private BytePointer outText;
 
     public OCR(String picturePath) {
+        logger.info("Beginning processing pictures with Tesseract.");
         this.picturePath = picturePath;
         this.txtPath = picturePath.substring(0, picturePath.lastIndexOf('.')) + ".txt";
-        this.setName("OCR" + this.hashCode());
-        this.setDaemon(false);
-        this.start();
+        run();
     }
 
-    @Override
-    public void run() {
+    private void run() {
         if (api.Init(iteHomeDir, "rus") != 0) {
             System.err.println("Could not initialize tesseract.");
             System.exit(1);
@@ -60,4 +61,13 @@ public class OCR extends Thread {
         pixDestroy(image);
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 }

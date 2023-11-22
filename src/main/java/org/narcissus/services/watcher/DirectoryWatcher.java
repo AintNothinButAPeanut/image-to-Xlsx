@@ -1,7 +1,7 @@
 package org.narcissus.services.watcher;
 
 import org.narcissus.exceptions.ITEDirectoryWatcherException;
-import org.narcissus.utils.PythonMapper;
+import org.narcissus.services.OCR.ITEProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,16 +15,15 @@ import java.nio.file.*;
 public class DirectoryWatcher implements CommandLineRunner {
 
     Logger logger = LoggerFactory.getLogger(DirectoryWatcher.class);
-    @Value("${linux.home}")
-    private String homeDir;
-    @Value("${ite.OCRDir}")
-    private String iteOcrDir;
+
     @Value("${ite.uploadsDir}")
     private String iteUploadDir;
-    @Value("${ite.prefix}")
-    private String itePrefix;
+    @Value("${ite.OCRDir}")
+    private String iteOCRDir;
+    @Value("${ite.excelsDir}")
+    private String iteExcelDir;
     private WatchService watchService;
-    private WatchKey key;
+    private WatchKey OCRDirKey;
 
     public DirectoryWatcher() {
         try {
@@ -37,13 +36,13 @@ public class DirectoryWatcher implements CommandLineRunner {
     @Override
     public void run(String... args) {
         try {
-            key = registerNewDirectoryWatcher(iteOcrDir, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE);
+            OCRDirKey = registerNewDirectoryWatcher(iteOCRDir, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE);
             logger.info("WatchService is up and running.");
 
-            while ((key = watchService.take()) != null) {
-                //512 events at a time at max
-                key.pollEvents().forEach(this::manageWatcherEvent);
-                key.reset();
+            while ((OCRDirKey = watchService.take()) != null) {
+                    //512 events at a time at max
+                OCRDirKey.pollEvents().forEach(this::manageWatcherEvent);
+                OCRDirKey.reset();
             }
 
             watchService.close();
@@ -53,24 +52,21 @@ public class DirectoryWatcher implements CommandLineRunner {
     }
 
     private void manageWatcherEvent(WatchEvent<?> event) {
-        //TODO THIS IS INCREDIBLY BAD. MUST adhere to this practices LATER https://proglib.io/p/monitoring-faylov-vmeste-s-java-nio-2020-01-25
-        //TODO also use switch enhanced lambda way
+        //Proper observer pattern https://proglib.io/p/monitoring-faylov-vmeste-s-java-nio-2020-01-25
         switch (event.kind().toString()) {
             case "ENTRY_CREATE":
-
+                logger.info("Detected new directory.");
                 if (event.context().toString().contains("ITE")) {
-                    logger.info(event.context() + " directory is MOVED");
-                    new PythonMapper(iteOcrDir + "/" + event.context());
+                    String identifier = event.context().toString();
+                    new ITEProcessor(iteOCRDir + "/" + event.context(), identifier);
                 }
 
             case "ENTRY_DELETE":
-                //TODO implement logic
-            case "ENTRY_MODIFY":
-                //TODO implement logic
-            case "OVERFLOW":
-                throw new ITEDirectoryWatcherException("DirectoryWatcherOverflow happened.", new RuntimeException());
-            default:
 
+            case "ENTRY_MODIFY":
+
+            case "OVERFLOW":
+                //For some reason overflow even is always active. Do not thor exceptions here otherwise crashes are inevitable
         }
     }
 
