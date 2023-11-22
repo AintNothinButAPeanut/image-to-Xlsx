@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 import static org.bytedeco.leptonica.global.leptonica.pixDestroy;
 import static org.bytedeco.leptonica.global.leptonica.pixRead;
 
-public final class OCR extends Thread {
+public final class OCR {
 
     private static final String iteHomeDir = "/home/user/ITE";
     private final TessBaseAPI api = new TessBaseAPI();
@@ -23,13 +23,11 @@ public final class OCR extends Thread {
     public OCR(String picturePath) {
         this.picturePath = picturePath;
         this.txtPath = picturePath.substring(0, picturePath.lastIndexOf('.')) + ".txt";
-        //this.setName("OCRThread@" + this.hashCode() + " --- " + "Started on " + new Date());
-        this.setDaemon(true);
-        this.start();
+        run();
     }
 
-    @Override
-    public void run() {
+
+    private void run() {
         if (api.Init(iteHomeDir, "rus") != 0) {
             System.err.println("Could not initialize tesseract.");
             System.exit(1);

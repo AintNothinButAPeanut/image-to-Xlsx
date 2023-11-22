@@ -54,7 +54,7 @@ public class UploadService {
             throw new ITEUploadException("Some files were not written to the disk for unknown reason.\n"
                     + filesWritten + " files written out of " + requestDTO.size(), new RuntimeException());
         } else {
-            logger.info("Successfully written to the disk " + filesWritten + " out of " + requestDTO.size() + "files.");
+            logger.info("Successfully written to the disk " + filesWritten + " out of " + requestDTO.size() + " files.");
         }
 
         moveDirectory(Paths.get(uploadDirectory), Paths.get(iteOcrDir));

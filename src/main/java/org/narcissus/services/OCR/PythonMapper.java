@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * OCR stands for <b>Optical Character Recognition</b>.<br>
@@ -18,35 +19,27 @@ import java.io.File;
  * @since 1.0
  */
 
-public final class PythonMapper extends Thread {
+public final class PythonMapper {
 
-    private final static File workingDirectory = new File(System.getenv("HOME") + "/ITE");
     private final ProcessBuilder pb;
-    private final File directoryWithPictures;
+    private final static String linuxUserName = System.getenv("USER");
     private final static String targetDirectory = "/home/user/ITE/Excels";
-    private final String identifier;
     Logger logger = LoggerFactory.getLogger(PythonMapper.class);
 
     public PythonMapper(String sourceDir, String identifier) {
-        pb = new ProcessBuilder();
-        pb.directory(workingDirectory);
-        this.directoryWithPictures = new File(sourceDir);
-        this.identifier = identifier;
-        //this.setName("PythonThread@" + this.hashCode() + " --- " + "Started on " + new Date());
-        this.setDaemon(true);
-        this.start();
-    }
-
-    @Override
-    public void run() {
-        pb.command(
-                "/bin/sh",
-                "-c",
-                String.format( //python3 python_mapper.py "/home/ITE/OCR/ITExxxx"  "/home/user/ITE/Excels"
-                        "python3 python_mapper.py %s %s",
-                        directoryWithPictures.getAbsolutePath(),
-                        targetDirectory,
-                        identifier));
+        pb = new ProcessBuilder(
+                "python3",
+                "/home/" + linuxUserName + "/ITE/python_mapper.py",
+                sourceDir,        //arg[1] 'source'
+                targetDirectory, //arg[2] 'target'
+                identifier);    //arg[3] 'controller identifier'
+        pb.redirectErrorStream(true);
+        pb.redirectOutput(new File("/home/user/output.txt"));
+        try {
+            pb.start();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
