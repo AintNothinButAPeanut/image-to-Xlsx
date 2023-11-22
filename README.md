@@ -23,11 +23,13 @@ I needed a pet project I would be interested in so there it is.
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;├── /python_mapper.py (downloaded from this repository)<br>
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;├── /rus.traineddata (downloaded from this repository)<br>
 </li>
+  
 <li>Make sure the server has JVM version 17+</li>
+<li>Make sure the server has python3-pip (otherwise "sudo apt install python3-pip")</li>
 <li>Make sure the server has Python3 with following packages: 
-<ul>Pillow==10.1.0<br>openpyxl==3.1.2
-</ul>
-<li>Make sure the server has python3-pip (otherwise "sudo apt install python3-pip")</li></li>
+<ul>Pillow==10.1.0<br>
+    openpyxl==3.1.2
+</ul></li>
 <li>Make sure the TESSDATA_PREFIX environment variable is set to /home/username. To do this on bash add "export TESSDATA_PREFIX=/home/username/ITE" line in "~/.profile"</li>
 </ol>
 
