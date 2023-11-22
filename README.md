@@ -28,7 +28,7 @@ I needed a pet project I would be interested in so there it is.
 <ul>Pillow==10.1.0<br>openpyxl==3.1.2
 </ul>
 <li>Make sure the server has python3-pip (otherwise "sudo apt install python3-pip")</li></li>
-<li>Make sure the TESSDATA_PREFIX environment variable is set to /home/username</li>
+<li>Make sure the TESSDATA_PREFIX environment variable is set to /home/username. If on bash add "export TESSDATA_PREFIX=/home/username/ITE" line in ~/.profile</li>
 </ol>
 
 
