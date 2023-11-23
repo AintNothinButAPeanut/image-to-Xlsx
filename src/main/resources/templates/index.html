@@ -1,51 +1,87 @@
-<!DOCTYPE HTML>
-<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns:th="https://www.thymeleaf.org">
-<head>
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns="http://www.w3.org/1999/html"
+  xmlns:th="https://www.thymeleaf.org"
+>
+  <head>
     <title>Image to excel</title>
-    <!-- <link th:href="@{/style.css}" rel="stylesheet"/>-->
-    <link href="style.css" rel="stylesheet"/>
-    <link href="http://example.com/favicon.png" rel="icon">
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
-</head>
-<body>
-
-<div>
-    <h1>
-        Image(-s) to .xlsx
-    </h1>
-    <hr>
-    <p>Choose pictures to be transformed into a text/picture pair, put into a .xlsx sheet.</p>
-    For each request some rules are in order:
-    <ul>
-        <li>No more than <b><em>100</em></b> pictures at a time</li>
-        <li>Supported extensions are: <b>.jpg, .png, .tiff</b></li>
-        <li>Max size of a picture in your list is <b>5Mb</b>.
+    <link th:href="@{/style.css}" rel="stylesheet"/>
+    <!-- <link href="../static/style.css" rel="stylesheet" /> -->
+    <link href="http://example.com/favicon.png" rel="icon" />
+    <!-- add favicon -->
+    <link rel="icon" type="image/x-icon" href="../static/favicon.png" />
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <div>
+      <h1>Image(-s) to .xlsx</h1>
+      <hr />
+      <p>
+        Choose pictures to be transformed into a text/picture pair, put into a
+        .xlsx sheet.
+      </p>
+      For each request some rules are in order:
+      <ul>
+        <li>
+          No more than <b><em>100</em></b> pictures at a time
         </li>
+        <li>Supported extensions are: <b>.jpg, .png, .tiff</b></li>
+        <li>Max size of a picture in your list is <b>5Mb</b>.</li>
         <!--<li>(TODO)You agree that text from your pictures will be used to train the OCR program so that each submission
             improves character recognition quality for anyone who uses this website
         </li>-->
-    </ul>
+      </ul>
 
-    <form action="#" enctype="multipart/form-data" id="picsInputForm" method="post" th:action="@{/upload}">
+      <form enctype="multipart/form-data" id="picsInputForm" method="post">
         <!--  <p>Id: <input type="text" th:field="*{id}" /></p>
           <p>Message: <input type="text" th:field="*{content}" /></p>   th:object="${string_greeting_form}" -->
-        <input accept="image/*" multiple name="fileInput" style="font-family: courier;" type="file">
+        <input
+          accept="image/*"
+          multiple
+          id="fileInput"
+          name="fileInput"
+          style="font-family: courier"
+          type="file"
+        />
         <p>
-            <input type="submit" value="Submit"/>
-            <input type="reset" value="Remove selected file(-s)"/>
+          <input type="submit" value="Submit" />
+          <input type="reset" value="Remove selected file(-s)" />
         </p>
+      </form>
 
-    </form>
+      <p>
+        Your spreadsheet will download automatically after the processing is
+        done.
+      </p>
+      <hr />
+    </div>
+  </body>
+  <footer id="footer">
+    Please come and see this website's source code on
+    <a href="github.com">GitHub</a>
+  </footer>
 
-    <p>Your spreadsheet will download automatically after the processing is done.</p>
-    <hr>
+  <script>
+    const form = document.getElementById("picsInputForm");
+    const fileInput = document.getElementById("fileInput");
 
+    form.addEventListener("submit", uploadFiles);
 
-</div>
+    async function uploadFiles(event) {
+      event.preventDefault();
+      const formData = new FormData();
+      const files = fileInput.files;
+      for (let i = 0; i < files.length; i++) {
+        formData.append("file", files[i]);
+      }
+      const response = await fetch("/upload", {
+        method: "POST",
+        body: formData,
+      });
 
-
-</body>
-<footer id="footer">
-    Please come and see this website's source code on <a href="github.com">GitHub</a>
-</footer>
+      console.log({ response });
+    }
+  </script>
+  <!-- <script src="../static/index.js"></script> -->
 </html>
