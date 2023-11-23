@@ -51,6 +51,7 @@ public class UploadController {
         }
 
         //TODO fix this, this is bad and awful
+        //reverted
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
