@@ -9,7 +9,7 @@ async function uploadFiles(event) {
   const formData = new FormData();
   const files = fileInput.files;
   for (let i = 0; i < files.length; i++) {
-    formData.append("file", files[i]);
+    formData.append("fileInput", files[i]);
   }
   const response = await fetch("/upload", {
     method: "POST",
