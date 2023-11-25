@@ -54,18 +54,22 @@ public class DirectoryWatcher implements CommandLineRunner {
     private void manageWatcherEvent(WatchEvent<?> event) {
         //Proper observer pattern https://proglib.io/p/monitoring-faylov-vmeste-s-java-nio-2020-01-25
         switch (event.kind().toString()) {
-            case "ENTRY_CREATE":
+            case "ENTRY_CREATE" -> {
                 logger.info("Detected new directory.");
                 if (event.context().toString().contains("ITE")) {
                     String identifier = event.context().toString();
                     new ITEProcessor(iteOCRDir + "/" + event.context(), identifier);
                 }
+            }
 
-            case "ENTRY_DELETE":
+            case "ENTRY_DELETE" -> {
+            }
 
-            case "ENTRY_MODIFY":
+            case "ENTRY_MODIFY" -> {
+            }
 
-            case "OVERFLOW":
+            case "OVERFLOW" -> {
+            }
                 //For some reason overflow even is always active. Do not thor exceptions here otherwise crashes are inevitable
         }
     }
