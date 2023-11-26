@@ -72,7 +72,6 @@ li {
   position: relative;
 }
 li::before {
-  left: 0;
   position: absolute;
   width: 6px;
   height: 2px;
@@ -80,7 +79,8 @@ li::before {
   content: "";
   top: 50%;
   left: -12px;
-  transform: translate(0, -50%);
+  transform: translateX(-50%);
+  line-height: 0.875em;
   background: var(--secondary-color);
 }
 
