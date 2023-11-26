@@ -7,7 +7,7 @@
   <head>
     <title>Image to excel</title>
     <link th:href="@{/style.css}" rel="stylesheet" />
-    <link rel="stylesheet" th:href="@{/favicon.ico}" type="image/x-icon"/>
+    <link rel="stylesheet" th:href="@{/favicon.ico}" type="image/x-icon" />
     <!-- <link href="../static/style.css" rel="stylesheet" /> -->
     <!-- <link href="../static/favicon.png" rel="icon" /> -->
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
@@ -19,11 +19,15 @@
       <div
         class="container"
         :class="{active: dropZoneIsActive}"
-        @drop.prevent.stop="handleDropFiles"
         @dragenter.prevent.stop="addDropzoneActive"
-        @dragleave.prevent.stop="removeDropzoneActive"
+        @drop.prevent.stop="handleDropFiles"
         @dragover.prevent.stop
       >
+        <div
+          class="container-dropzone"
+          v-if="dropZoneIsActive"
+          @dragleave.prevent.stop="removeDropzoneActive"
+        ></div>
         <header>
           <h1 class="title">Image(-s) to .xlsx converter</h1>
           <div class="description">
@@ -109,7 +113,9 @@
         </main>
         <footer class="footer">
           Please come and see this website's source code on
-          <a href="https://github.com/narcissusTheFlower/image-to-Xlsx">GitHub</a>
+          <a href="https://github.com/narcissusTheFlower/image-to-Xlsx"
+            >GitHub</a
+          >
         </footer>
       </div>
     </div>
@@ -129,20 +135,14 @@
           }
 
           function addDropzoneActive(event) {
-            event.stopPropagation();
-            event.preventDefault();
             dropZoneIsActive.value = true;
           }
 
           function removeDropzoneActive(event) {
-            event.stopPropagation();
-            event.preventDefault();
             dropZoneIsActive.value = false;
           }
 
           function handleDropFiles(event) {
-            event.stopPropagation();
-            event.preventDefault();
             const dt = event.dataTransfer;
             const files = dt.files;
             filesList.value = files;
