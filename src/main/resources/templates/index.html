@@ -19,14 +19,14 @@
       <div
         class="container"
         :class="{active: dropZoneIsActive}"
-        @dragenter.prevent.stop="addDropzoneActive"
+        @dragenter.prevent.stop="handleDropzoneActive(true)"
         @drop.prevent.stop="handleDropFiles"
         @dragover.prevent.stop
       >
         <div
           class="container-dropzone"
           v-if="dropZoneIsActive"
-          @dragleave.prevent.stop="removeDropzoneActive"
+          @dragleave.prevent.stop="handleDropzoneActive(false)"
         ></div>
         <header>
           <h1 class="title">Image(-s) to .xlsx converter</h1>
@@ -100,12 +100,93 @@
                 </div>
                 <button
                   class="submit-button"
+                  style="width: 200px"
+                  :style="loading ? 'cursor: not-allowed; padding: 0' : ''"
+                  :disabled="loading"
                   :class="{disabled: !filesList.length || loading}"
                   type="submit"
                 >
-                  {{ loading ? "Loading..." : "Upload"}}
+                  <template v-if="loading">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      :style="loading ? 'width: 76px; height: 76px' : ''"
+                      viewBox="0 0 200 200"
+                    >
+                      <radialGradient
+                        id="a11"
+                        cx=".66"
+                        fx=".66"
+                        cy=".3125"
+                        fy=".3125"
+                        gradientTransform="scale(1.5)"
+                      >
+                        <stop offset="0" stop-color="currentColor"></stop>
+                        <stop
+                          offset=".3"
+                          stop-color="currentColor"
+                          stop-opacity=".9"
+                        ></stop>
+                        <stop
+                          offset=".6"
+                          stop-color="currentColor"
+                          stop-opacity=".6"
+                        ></stop>
+                        <stop
+                          offset=".8"
+                          stop-color="currentColor"
+                          stop-opacity=".3"
+                        ></stop>
+                        <stop
+                          offset="1"
+                          stop-color="currentColor"
+                          stop-opacity="0"
+                        ></stop>
+                      </radialGradient>
+                      <circle
+                        transform-origin="center"
+                        fill="none"
+                        stroke="url(#a11)"
+                        stroke-width="15"
+                        stroke-linecap="round"
+                        stroke-dasharray="200 1000"
+                        stroke-dashoffset="0"
+                        cx="100"
+                        cy="100"
+                        r="70"
+                      >
+                        <animateTransform
+                          type="rotate"
+                          attributeName="transform"
+                          calcMode="spline"
+                          dur="2"
+                          values="360;0"
+                          keyTimes="0;1"
+                          keySplines="0 0 1 1"
+                          repeatCount="indefinite"
+                        ></animateTransform>
+                      </circle>
+                      <circle
+                        transform-origin="center"
+                        fill="none"
+                        opacity=".2"
+                        stroke="currentColor"
+                        stroke-width="15"
+                        stroke-linecap="round"
+                        cx="100"
+                        cy="100"
+                        r="70"
+                      ></circle>
+                    </svg>
+                  </template>
+                  <template v-else> Upload </template>
                 </button>
-                <button class="clear-button" @click="clearFilesList">
+                <button
+                  class="clear-button"
+                  @click="clearFilesList"
+                  :disabled="loading"
+                  :class="{disabled: !filesList.length || loading}"
+                >
                   Clear files
                 </button>
               </div>
@@ -135,19 +216,15 @@
             filesList.value = files;
           }
 
-          function addDropzoneActive(event) {
-            dropZoneIsActive.value = true;
-          }
-
-          function removeDropzoneActive(event) {
-            dropZoneIsActive.value = false;
+          function handleDropzoneActive(value = false) {
+            dropZoneIsActive.value = value;
           }
 
           function handleDropFiles(event) {
             const dt = event.dataTransfer;
             const files = dt.files;
             filesList.value = files;
-            dropZoneIsActive.value = false;
+            handleDropzoneActive(false);
           }
 
           async function handleUpload() {
@@ -175,11 +252,10 @@
             filesList,
             dropZoneIsActive,
             loading,
+            handleDropzoneActive,
             handleSelectFiles,
             handleDropFiles,
             clearFilesList,
-            addDropzoneActive,
-            removeDropzoneActive,
             handleUpload,
           };
         },
