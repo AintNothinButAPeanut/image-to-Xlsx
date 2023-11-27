@@ -70,18 +70,16 @@ li {
   color: var(--tertiary-color);
   font-size: 0.875em;
   position: relative;
+  display: flex;
+  align-items: center;
 }
-li::before {
-  position: absolute;
+li > span.mark {
+  display: block;
+  margin-left: calc(-18px);
   width: 6px;
   height: 2px;
-  display: block;
-  content: "";
-  top: 50%;
-  left: -12px;
-  transform: translateX(-50%);
-  line-height: 0.875em;
   background: var(--secondary-color);
+  margin-right: 6px;
 }
 
 h1.title {
