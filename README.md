@@ -12,7 +12,7 @@
 Web site was made out of inspiration for a python script my groupmate developed locally.<br>
 I needed a pet project I would be interested in so there it is.
 <hr>
-<h2>1. Prepare server</h2>
+<h2>1. Prepare server (Linux only)</h2>
 <ol>
 <li>Build file structure by hand:<br>
 /home/username<br>
