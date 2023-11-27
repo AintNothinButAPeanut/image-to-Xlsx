@@ -22,6 +22,7 @@ I needed a pet project I would be interested in so there it is.
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;├── /Excels <br>
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;├── /python_mapper.py (downloaded from this repository)<br>
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;├── /rus.traineddata (downloaded from this repository)<br>
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;├── /imageToExcel-x.x.jar (downloaded from this repository)<br>  
 </li>
   
 <li>Make sure the server has JVM version 17+</li>
