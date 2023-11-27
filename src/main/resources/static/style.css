@@ -103,7 +103,6 @@ form {
 
 button,
 .file-upload {
-  display: flex;
   width: fit-content;
   color: var(--white-color);
   background-color: var(--primary-color);
@@ -113,11 +112,18 @@ button,
   padding: 24px 48px;
   transition: background-color 0.1s ease-in-out;
   user-select: none;
+  display: flex;
   justify-content: center;
   align-items: center;
   line-height: 1em;
 }
-.submit-button:hover,
+
+button.disabled,
+.file-upload.disabled {
+  cursor: not-allowed;
+}
+
+.submit-button:hover:not(.disabled),
 .file-upload:hover {
   background-color: var(--primary-hover-color);
 }
