@@ -62,24 +62,9 @@ body {
 input[type="file"] {
   display: none;
 }
-ul > li {
-  list-style: none;
-}
-
+ul,
 li {
-  color: var(--tertiary-color);
-  font-size: 0.875em;
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-li > span.mark {
-  display: block;
-  margin-left: calc(-18px);
-  width: 6px;
-  height: 2px;
-  background: var(--secondary-color);
-  margin-right: 6px;
+  list-style: disc;
 }
 
 h1.title {
