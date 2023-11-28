@@ -17,7 +17,8 @@ import static org.bytedeco.leptonica.global.leptonica.pixRead;
 public final class OCR {
 
     Logger logger = LoggerFactory.getLogger(OCR.class);
-    private static final String iteHomeDir = "/home/user/ITE";
+    private final static String linuxHome = System.getenv("HOME");
+    private static final String iteHomeDir = linuxHome + "/ITE";
     private final TessBaseAPI api = new TessBaseAPI();
     private String picturePath;
     private String txtPath;
@@ -59,15 +60,5 @@ public final class OCR {
         api.End();
 
         pixDestroy(image);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
     }
 }
