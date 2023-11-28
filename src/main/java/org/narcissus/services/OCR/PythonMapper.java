@@ -8,9 +8,7 @@ import java.io.IOException;
 
 /**
  * OCR stands for <b>Optical Character Recognition</b>.<br>
- * <p> New OCR instance, which is a new thread, is created for each web request. <br>
- * Those OCR instances create even more threads for each picture in the request to boost the speed with which each request is processed.</p>
- * <p>Python script then puts processed pictures and text in pairs relative to each other as follows <br>
+ * <p> New OCR instance is created for each web request. <br>
  * <b>"A1 = 'text'| B1 = picture.png" <br>
  * "A2 = 'text'| B2 = picture1.png" <br>
  * and so on ... </b><br>
@@ -22,15 +20,15 @@ import java.io.IOException;
 public final class PythonMapper {
 
     private final ProcessBuilder pb;
-    private final static String linuxUserName = System.getenv("USER");
-    private final static String targetDirectory = "/home/user/ITE/Excels";
+    private final static String linuxHome = System.getenv("HOME");
+    private final static String targetDirectory = linuxHome + "/ITE/Excels";
     Logger logger = LoggerFactory.getLogger(PythonMapper.class);
 
     public PythonMapper(String sourceDir, String identifier) {
         logger.info("Beginning processing of the directory with python script.");
         pb = new ProcessBuilder(
                 "python3",
-                "/home/" + linuxUserName + "/ITE/python_mapper.py",
+                linuxHome + "/ITE/python_mapper.py",
                 sourceDir,        //arg[1] 'source'
                 targetDirectory, //arg[2] 'target'
                 identifier);    //arg[3] 'controller identifier'
