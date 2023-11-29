@@ -14,9 +14,9 @@ import java.nio.file.Paths;
 import static org.bytedeco.leptonica.global.leptonica.pixDestroy;
 import static org.bytedeco.leptonica.global.leptonica.pixRead;
 
-public final class OCR {
+public final class Tesseract {
 
-    Logger logger = LoggerFactory.getLogger(OCR.class);
+    Logger logger = LoggerFactory.getLogger(Tesseract.class);
     private final static String linuxHome = System.getenv("HOME");
     private static final String iteHomeDir = linuxHome + "/ITE";
     private final TessBaseAPI api = new TessBaseAPI();
@@ -24,7 +24,7 @@ public final class OCR {
     private String txtPath;
     private BytePointer outText;
 
-    public OCR(String picturePath) {
+    public Tesseract(String picturePath) {
         logger.info("Beginning processing pictures with Tesseract.");
         this.picturePath = picturePath;
         this.txtPath = picturePath.substring(0, picturePath.lastIndexOf('.')) + ".txt";

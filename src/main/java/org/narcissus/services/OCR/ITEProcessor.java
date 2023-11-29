@@ -18,7 +18,7 @@ public final class ITEProcessor {
     public void runOCR(String sourceDirectory) {
         Arrays.asList(
                         new File(sourceDirectory).listFiles())
-                .forEach(file -> new OCR(file.getAbsolutePath()));
+                .forEach(file -> new Tesseract(file.getAbsolutePath()));
     }
 
     public void runPython() {

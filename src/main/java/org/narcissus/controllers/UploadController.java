@@ -72,7 +72,7 @@ public class UploadController {
         for (; ; ) {
             if (dir.listFiles().length != 0) {
                 try {
-                    Thread.sleep(50);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

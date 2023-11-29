@@ -3,12 +3,11 @@ package org.narcissus.services.OCR;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
- * OCR stands for <b>Optical Character Recognition</b>.<br>
- * <p> New OCR instance is created for each web request. <br>
+ * Tesseract stands for <b>Optical Character Recognition</b>.<br>
+ * <p> New Tesseract instance is created for each web request. <br>
  * <b>"A1 = 'text'| B1 = picture.png" <br>
  * "A2 = 'text'| B2 = picture1.png" <br>
  * and so on ... </b><br>
@@ -21,7 +20,7 @@ public final class PythonMapper {
 
     private final ProcessBuilder pb;
     private final static String linuxHome = System.getenv("HOME");
-    private final static String targetDirectory = linuxHome + "/ITE/Excels";
+    private final static String targetDirectory = linuxHome + "/ITE/excels";
     Logger logger = LoggerFactory.getLogger(PythonMapper.class);
 
     public PythonMapper(String sourceDir, String identifier) {
@@ -32,22 +31,10 @@ public final class PythonMapper {
                 sourceDir,        //arg[1] 'source'
                 targetDirectory, //arg[2] 'target'
                 identifier);    //arg[3] 'controller identifier'
-        pb.redirectErrorStream(true);
-        pb.redirectOutput(new File("/home/user/output.txt"));
         try {
             pb.start();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
     }
 }
