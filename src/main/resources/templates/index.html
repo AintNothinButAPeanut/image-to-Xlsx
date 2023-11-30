@@ -8,7 +8,7 @@
     <title>Image to excel</title>
     <link th:href="@{/style.css}" rel="stylesheet" />
     <link rel="stylesheet" th:href="@{/favicon.ico}" type="image/x-icon" />
-    <link href="../static/style.css" rel="stylesheet" />
+    <!-- <link href="../static/style.css" rel="stylesheet" /> -->
     <!-- <link href="../static/favicon.png" rel="icon" /> -->
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
   </head>
@@ -86,20 +86,20 @@
                   @click="languageSelectIsOpen = !languageSelectIsOpen"
                 >
                   {{ selectedLanguageTitle }}
+                  <div class="arrow"></div>
                 </div>
-                <div
-                  class="items"
-                  :class="{ selectHide: !languageSelectIsOpen }"
-                >
-                  <div
-                    v-for="(language, i) of languages"
-                    :class="{ 'is-selected': language.value === selectedLanguage }"
-                    :key="i"
-                    @click="handleSelectLanguage(language.value)"
-                  >
-                    {{ language.title }}
+                <transition name="slide-fade">
+                  <div class="items" v-if="languageSelectIsOpen">
+                    <div
+                      v-for="(language, i) of languages"
+                      :class="{ 'is-selected': language.value === selectedLanguage }"
+                      :key="i"
+                      @click="handleSelectLanguage(language.value)"
+                    >
+                      {{ language.title }}
+                    </div>
                   </div>
-                </div>
+                </transition>
               </div>
             </div>
             <div class="file-upload-container" v-if="!filesList.length">
