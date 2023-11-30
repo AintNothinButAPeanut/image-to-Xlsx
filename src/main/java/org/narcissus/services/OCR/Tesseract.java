@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import static org.bytedeco.leptonica.global.leptonica.pixDestroy;
 import static org.bytedeco.leptonica.global.leptonica.pixRead;
 
+//TODO: make threaded. Noticeable speed boost
 public final class Tesseract {
 
     Logger logger = LoggerFactory.getLogger(Tesseract.class);
@@ -32,11 +33,10 @@ public final class Tesseract {
     }
 
     private void run() {
-        if (api.Init(iteHomeDir, "rus") != 0) {
+        if (api.Init(iteHomeDir, "rus+eng") != 0) {
             System.err.println("Could not initialize tesseract.");
             System.exit(1);
         }
-
         PIX image = pixRead(picturePath);
         api.SetImage(image);
 

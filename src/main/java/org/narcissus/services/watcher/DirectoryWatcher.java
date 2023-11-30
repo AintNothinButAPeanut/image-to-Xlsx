@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.List;
 
 @Component
 public class DirectoryWatcher implements CommandLineRunner {
@@ -23,7 +25,7 @@ public class DirectoryWatcher implements CommandLineRunner {
     @Value("${ite.excelsDir}")
     private String iteExcelDir;
     private WatchService watchService;
-    private WatchKey OCRDirKey;
+    private WatchKey OCRDirKey, excelKey;
 
     public DirectoryWatcher() {
         try {
@@ -37,12 +39,16 @@ public class DirectoryWatcher implements CommandLineRunner {
     public void run(String... args) {
         try {
             OCRDirKey = registerNewDirectoryWatcher(iteOCRDir, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE);
+            excelKey = registerNewDirectoryWatcher(iteExcelDir, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE);
+            List<WatchKey> keys = List.of(OCRDirKey, excelKey);
             logger.info("WatchService is up and running.");
 
-            while ((OCRDirKey = watchService.take()) != null) {
+            for (WatchKey key : keys) {
+                while ((key = watchService.take()) != null) {
                     //512 events at a time at max
-                OCRDirKey.pollEvents().forEach(this::manageWatcherEvent);
-                OCRDirKey.reset();
+                    key.pollEvents().forEach(this::manageWatcherEvent);
+                    key.reset();
+                }
             }
 
             watchService.close();
@@ -55,10 +61,12 @@ public class DirectoryWatcher implements CommandLineRunner {
         //Proper observer pattern https://proglib.io/p/monitoring-faylov-vmeste-s-java-nio-2020-01-25
         switch (event.kind().toString()) {
             case "ENTRY_CREATE" -> {
-                logger.info("Detected new directory.");
-                if (event.context().toString().contains("ITE")) {
-                    String identifier = event.context().toString();
-                    new ITEProcessor(iteOCRDir + "/" + event.context(), identifier);
+                logger.info("Detected new file");
+                if (event.context().toString().contains("ITE") & !event.context().toString().contains("xlsx")) {
+                    process(event);
+                } else {
+                    //TODO: scheduled cleanup at night
+                    //cleanUp();
                 }
             }
 
@@ -70,7 +78,7 @@ public class DirectoryWatcher implements CommandLineRunner {
 
             case "OVERFLOW" -> {
             }
-                //For some reason overflow even is always active. Do not thor exceptions here otherwise crashes are inevitable
+            //For some reason overflow even is always triggered. Do not thor exceptions here otherwise crashes are inevitable
         }
     }
 
@@ -80,6 +88,21 @@ public class DirectoryWatcher implements CommandLineRunner {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    //TODO: do it on a schedule
+    private void cleanUp(){
+        for(File directory : new File(iteOCRDir).listFiles()) {
+            for (File file: directory.listFiles()) {
+                file.delete();
+            }
+            directory.delete();
+        }
+    }
+
+    private void process(WatchEvent<?> event){
+        String identifier = event.context().toString();
+        new ITEProcessor(iteOCRDir + "/" + event.context(), identifier);
     }
 
 }

@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -48,10 +49,7 @@ public class UploadController {
             logger.debug("Failed to upload files to the server storage.");
         }
 
-//        waitForExcel();
-//        File excelFile = Arrays.stream(Objects.requireNonNull(new File(iteExcel)
-//                        .listFiles()))
-//                .filter(file -> file.toString().contains(uuid)).toList().get(0);
+//        waitForExcel();  File excelFile = Arrays.stream(Objects.requireNonNull(new File(iteExcel)   .listFiles()))  .filter(file -> file.toString().contains(uuid)).toList().get(0);
         File excelFile = waitForExcel();
         byte[] fileContent;
 
@@ -61,13 +59,14 @@ public class UploadController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
+        logger.info("Returning the generated excel file.");
         return ResponseEntity.ok()
                 .contentType(MediaType.valueOf(excelSheetMimeType))
                 .body(fileContent);
     }
 
     private File waitForExcel() {
+        logger.info("Waiting for the excel file to finish generating...");
         File dir = new File(iteExcel);
         for (; ; ) {
             if (dir.listFiles().length != 0) {
