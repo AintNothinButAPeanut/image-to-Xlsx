@@ -23,6 +23,7 @@ Build file structure by hand:<br>
                 ├── /excels 
                 ├── /python_mapper.py (downloaded from this repository)
                 ├── /rus.traineddata (downloaded from this repository)
+                ├── /eng.traineddata (downloaded from this repository)
                 ├── /imageToExcel-x.x.jar (downloaded from this repository)  
 ```
 
@@ -34,7 +35,8 @@ mkdir ITE/OCR;
 mkdir ITE/uploads;
 mkdir ITE/excels;
 cp ~/image-to-Xlsx/python_mapper.py ~/ITE;
-cp ~/image-to-Xlsx/rus.traineddata ~/ITE
+cp ~/image-to-Xlsx/rus.traineddata ~/ITE;
+cp ~/image-to-Xlsx/eng.traineddata ~/ITE
 ```
 
 Then copy the .jar file as we did with other files **but** change the "x" in "imageToExcel-**x**.**x**.jar" to the
