@@ -90,7 +90,13 @@ sudo apt install python3 -y
 
 You do not need to worry about a specific version of python, python3 will suffice.<br>
 Now that python is installed lets invoke the `venv` for python purposes. <br>
-From your `cd ~/ITE` directory run the following commands:
+Firstly we need to run:<br>
+
+```
+sudo apt install python3.8-venv
+```
+
+Then from your `cd ~/ITE` directory run the following commands:
 
 ```
 python3 -m venv .venv;
