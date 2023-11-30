@@ -68,7 +68,7 @@ li {
 }
 
 h1.title {
-  color: black;
+  color: var(--secondary-color);
   font-size: 50px;
   text-align: center;
   margin: 20px 0;
@@ -89,21 +89,24 @@ h1.title {
 
 .main-container {
   display: flex;
-  flex: 1 1;
+  flex: 1 1 100%;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  height: 500px;
+  width: 380px;
 }
 
-form {
+.form {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
 }
 
 button,
 .file-upload {
-  width: fit-content;
+  width: max-content;
   color: var(--white-color);
   background-color: var(--primary-color);
   cursor: pointer;
@@ -140,6 +143,7 @@ button.disabled,
   justify-items: center;
   align-items: center;
   gap: 12px;
+  height: 200px;
 }
 
 .drop-message {
@@ -169,7 +173,6 @@ button.disabled,
 
 .info-handler-icon {
   display: flex;
-  width: fit-content;
   width: 30px;
   height: 30px;
 }
@@ -192,4 +195,77 @@ button.disabled,
 .info-handler:hover + .info-content {
   visibility: visible;
   display: flex;
+}
+
+/* custom select */
+.custom-select {
+  position: relative;
+  width: 100%;
+  text-align: left;
+  outline: none;
+  height: 47px;
+  line-height: 47px;
+}
+
+.custom-select .selected {
+  background-color: var(--secondary-color);
+  border-radius: 12px;
+  border: 1px solid #666666;
+  color: #fff;
+  padding-left: 1em;
+  cursor: pointer;
+  user-select: none;
+}
+
+.custom-select .selected.open {
+  border: 1px solid var(--primary-color);
+  border-radius: 12px 12px 0px 0px;
+}
+
+.custom-select .selected:after {
+  position: absolute;
+  content: "";
+  top: 22px;
+  right: 1em;
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+  border-color: #fff transparent transparent transparent;
+}
+
+.custom-select .items {
+  color: #fff;
+  border-radius: 0px 0px 12px 12px;
+  overflow: hidden;
+  border-right: 1px solid var(--primary-color);
+  border-left: 1px solid var(--primary-color);
+  border-bottom: 1px solid var(--primary-color);
+  position: absolute;
+  background-color: var(--secondary-color);
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+
+.custom-select .items div {
+  color: #fff;
+  padding-left: 1em;
+  cursor: pointer;
+  user-select: none;
+}
+
+.custom-select .items div:hover {
+  background-color: var(--primary-color);
+}
+
+.custom-select .items div.is-selected {
+  background-color: var(--primary-color);
+  opacity: 0.8;
+  border: none;
+  border-radius: 0;
+  cursor: default;
+}
+
+.selectHide {
+  display: none;
 }
