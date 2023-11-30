@@ -12,6 +12,7 @@
   --bg-color: #f5f5fa;
   --primary-color: #e5322d;
   --primary-hover-color: #bd060a;
+  --primary-color-light: #c23431;
   --secondary-color: #33333b;
   --tertiary-color: #47474f;
   --white-color: #ffffff;
@@ -106,7 +107,7 @@ h1.title {
 
 button,
 .file-upload {
-  width: max-content;
+  width: 100%;
   color: var(--white-color);
   background-color: var(--primary-color);
   cursor: pointer;
@@ -205,6 +206,7 @@ button.disabled,
   outline: none;
   height: 47px;
   line-height: 47px;
+  z-index: 1;
 }
 
 .custom-select .selected {
@@ -215,22 +217,48 @@ button.disabled,
   padding-left: 1em;
   cursor: pointer;
   user-select: none;
+  transition: border-radius 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  position: relative;
 }
 
 .custom-select .selected.open {
   border: 1px solid var(--primary-color);
   border-radius: 12px 12px 0px 0px;
+  border-bottom: transparent;
 }
 
-.custom-select .selected:after {
+.custom-select .selected .arrow {
+  height: 20px;
+  width: 20px;
   position: absolute;
-  content: "";
-  top: 22px;
   right: 1em;
-  width: 0;
-  height: 0;
-  border: 5px solid transparent;
-  border-color: #fff transparent transparent transparent;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.15s ease-in-out;
+}
+
+.custom-select .selected .arrow::after,
+.custom-select .selected .arrow::before {
+  position: absolute;
+  display: block;
+  border-radius: 50px;
+  content: "";
+  height: 10px;
+  width: 2px;
+  background-color: var(--bg-color);
+}
+.custom-select .selected .arrow::after {
+  transform: translateX(-150%) rotate(45deg);
+}
+.custom-select .selected .arrow::before {
+  transform: translateX(150%) rotate(-45deg);
+}
+
+.custom-select .selected.open .arrow {
+  transform: translateY(-50%) rotate(180deg);
 }
 
 .custom-select .items {
@@ -244,7 +272,7 @@ button.disabled,
   background-color: var(--secondary-color);
   left: 0;
   right: 0;
-  z-index: 1;
+  z-index: -1;
 }
 
 .custom-select .items div {
@@ -259,13 +287,23 @@ button.disabled,
 }
 
 .custom-select .items div.is-selected {
-  background-color: var(--primary-color);
-  opacity: 0.8;
+  background-color: var(--primary-color-light);
   border: none;
   border-radius: 0;
   cursor: default;
 }
 
-.selectHide {
-  display: none;
+/* transitions */
+.slide-fade-enter-active {
+  transition: all 0.15s ease-in-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.15s ease-in-out;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10%);
 }
