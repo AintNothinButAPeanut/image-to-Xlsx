@@ -21,7 +21,7 @@ import java.util.Date;
  * Instances of this class take control when a new web request is made.
  * <p>Files that come from the request are saved as follows (Linux file system only):</p>
  * <em><b>'/home/ITE/uploads'</b></em> <br>
- * From there they are passed to OCR.
+ * From there they are passed to Tesseract.
  *
  * @since 1.0
  */
