@@ -71,10 +71,8 @@
         </header>
         <main class="main-container">
           <form
-            enctype="multipart/form-data"
             class="form"
             id="picsInputForm"
-            method="post"
             @submit.prevent="handleUpload"
           >
             <div style="display: flex; flex-direction: column; gap: 8px">
@@ -236,6 +234,32 @@
           const dropZoneIsActive = ref(false);
           const loading = ref(false);
 
+          // languages
+          const selectedLanguage = ref("eng");
+          const languageSelectIsOpen = ref(false);
+          const languages = [
+            {
+              value: "eng",
+              title: "English",
+            },
+            {
+              value: "rus",
+              title: "Russian",
+            },
+            {
+              value: "rus+eng",
+              title: "Russian + English",
+            },
+          ];
+
+          const selectedLanguageTitle = computed(() => {
+            const foundLanguage = languages.find(
+              (lang) => lang.value === selectedLanguage.value
+            );
+            if (!foundLanguage) return selectedLanguage.value;
+            return foundLanguage.title;
+          });
+
           // files handling
           function handleSelectFiles(event) {
             const files = event.target.files;
@@ -265,6 +289,9 @@
             const response = await fetch("/upload", {
               method: "POST",
               body: formData,
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
             });
             const blob = await response.blob();
             const file = window.URL.createObjectURL(blob);
@@ -276,31 +303,7 @@
           function clearFilesList() {
             filesList.value = [];
           }
-          // languages
-          const selectedLanguage = ref("eng");
-          const languageSelectIsOpen = ref(false);
-          const languages = [
-            {
-              value: "eng",
-              title: "English",
-            },
-            {
-              value: "rus",
-              title: "Russian",
-            },
-            {
-              value: "rus+eng",
-              title: "Russian + English",
-            },
-          ];
-
-          const selectedLanguageTitle = computed(() => {
-            const foundLanguage = languages.find(
-              (lang) => lang.value === selectedLanguage.value
-            );
-            if (!foundLanguage) return selectedLanguage.value;
-            return foundLanguage.title;
-          });
+          
           function handleSelectLanguage(value) {
             if (selectedLanguage.value === value) return;
 
