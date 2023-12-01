@@ -70,13 +70,7 @@
           </div>
         </header>
         <main class="main-container">
-          <form
-            enctype="multipart/form-data"
-            class="form"
-            id="picsInputForm"
-            method="post"
-            @submit.prevent="handleUpload"
-          >
+          <form class="form" id="picsInputForm" @submit.prevent="handleUpload">
             <div style="display: flex; flex-direction: column; gap: 8px">
               <div>Choose processing language</div>
               <div class="custom-select" @blur="languageSelectIsOpen = false">
@@ -236,46 +230,6 @@
           const dropZoneIsActive = ref(false);
           const loading = ref(false);
 
-          // files handling
-          function handleSelectFiles(event) {
-            const files = event.target.files;
-            filesList.value = files;
-          }
-
-          function handleDropzoneActive(value = false) {
-            dropZoneIsActive.value = value;
-          }
-
-          function handleDropFiles(event) {
-            const dt = event.dataTransfer;
-            const files = dt.files;
-            filesList.value = files;
-            handleDropzoneActive(false);
-            languageSelectIsOpen.value = false;
-          }
-
-          async function handleUpload() {
-            loading.value = true;
-            const formData = new FormData();
-            filesList.value.forEach((file) => {
-              formData.append("fileInput", file);
-            });
-
-            formData.append("language", selectedLanguage.value);
-            const response = await fetch("/upload", {
-              method: "POST",
-              body: formData,
-            });
-            const blob = await response.blob();
-            const file = window.URL.createObjectURL(blob);
-            window.location.assign(file);
-            loading.value = false;
-            clearFilesList();
-          }
-
-          function clearFilesList() {
-            filesList.value = [];
-          }
           // languages
           const selectedLanguage = ref("eng");
           const languageSelectIsOpen = ref(false);
@@ -301,6 +255,51 @@
             if (!foundLanguage) return selectedLanguage.value;
             return foundLanguage.title;
           });
+
+          // files handling
+          function handleSelectFiles(event) {
+            const files = event.target.files;
+            filesList.value = files;
+          }
+
+          function handleDropzoneActive(value = false) {
+            dropZoneIsActive.value = value;
+          }
+
+          function handleDropFiles(event) {
+            const dt = event.dataTransfer;
+            const files = dt.files;
+            filesList.value = files;
+            handleDropzoneActive(false);
+            languageSelectIsOpen.value = false;
+          }
+
+          async function handleUpload() {
+            loading.value = true;
+            const formData = new FormData();
+            for (const file in filesList.value) {
+              formData.append("fileInput", filesList.value[file]);
+            }
+
+            formData.append("language", selectedLanguage.value);
+            const response = await fetch("/upload", {
+              method: "POST",
+              body: formData,
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            });
+            const blob = await response.blob();
+            const file = window.URL.createObjectURL(blob);
+            window.location.assign(file);
+            loading.value = false;
+            clearFilesList();
+          }
+
+          function clearFilesList() {
+            filesList.value = [];
+          }
+
           function handleSelectLanguage(value) {
             if (selectedLanguage.value === value) return;
 
