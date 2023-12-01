@@ -70,11 +70,7 @@
           </div>
         </header>
         <main class="main-container">
-          <form
-            class="form"
-            id="picsInputForm"
-            @submit.prevent="handleUpload"
-          >
+          <form class="form" id="picsInputForm" @submit.prevent="handleUpload">
             <div style="display: flex; flex-direction: column; gap: 8px">
               <div>Choose processing language</div>
               <div class="custom-select" @blur="languageSelectIsOpen = false">
@@ -281,9 +277,9 @@
           async function handleUpload() {
             loading.value = true;
             const formData = new FormData();
-            filesList.value.forEach((file) => {
-              formData.append("fileInput", file);
-            });
+            for (const file in filesList.value) {
+              formData.append("fileInput", filesList.value[file]);
+            }
 
             formData.append("language", selectedLanguage.value);
             const response = await fetch("/upload", {
@@ -303,7 +299,7 @@
           function clearFilesList() {
             filesList.value = [];
           }
-          
+
           function handleSelectLanguage(value) {
             if (selectedLanguage.value === value) return;
 
