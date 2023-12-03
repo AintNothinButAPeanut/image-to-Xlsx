@@ -90,7 +90,13 @@ sudo apt install python3 -y
 
 You do not need to worry about a specific version of python, python3 will suffice.<br>
 Now that python is installed lets invoke the `venv` for python purposes. <br>
-From your `cd ~/ITE` directory run the following commands:
+Firstly we need to run:<br>
+
+```
+sudo apt install python3.8-venv
+```
+
+Then from your `cd ~/ITE` directory run the following commands:
 
 ```
 python3 -m venv .venv;
@@ -127,6 +133,24 @@ file.
 </li>
 
 <hr>
+<h2>Network settings</h2>
+Let us setup certain network configurations. 
+The application needs to listen to port 80 in order for domain name provider to be able to connect to our IP without specifying the port.<br>
+But I find it to be bad practice to hoggle port 80. So we will configure port forwarding for this application. <br>
+<hr>
+
+Firstly we will explicitly allow usage of port 80 with `iptables`:
+
+```
+sudo iptables -I INPUT 1 -p tcp --dport 8080 -j ACCEPT;
+sudo iptables -I INPUT 1 -p tcp --dport 80 -j ACCEPT
+```
+
+Now we do the forwarding:
+
+```
+sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080
+```
 <h2>Running .jar on the server</h2>
 
 Now that the preparations are complete you can run the .jar file from `~/ITE` as follows:
