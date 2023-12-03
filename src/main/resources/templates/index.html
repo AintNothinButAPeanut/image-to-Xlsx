@@ -70,12 +70,32 @@
           </div>
         </header>
         <main class="main-container">
-          <form
-            enctype="multipart/form-data"
-            id="picsInputForm"
-            method="post"
-            @submit.prevent="handleUpload"
-          >
+          <form class="form" id="picsInputForm" @submit.prevent="handleUpload">
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <div>Choose processing language</div>
+              <div class="custom-select" @blur="languageSelectIsOpen = false">
+                <div
+                  class="selected"
+                  :class="{ open: languageSelectIsOpen }"
+                  @click="languageSelectIsOpen = !languageSelectIsOpen"
+                >
+                  {{ selectedLanguageTitle }}
+                  <div class="arrow"></div>
+                </div>
+                <transition name="slide-fade">
+                  <div class="items" v-if="languageSelectIsOpen">
+                    <div
+                      v-for="(language, i) of languages"
+                      :class="{ 'is-selected': language.value === selectedLanguage }"
+                      :key="i"
+                      @click="handleSelectLanguage(language.value)"
+                    >
+                      {{ language.title }}
+                    </div>
+                  </div>
+                </transition>
+              </div>
+            </div>
             <div class="file-upload-container" v-if="!filesList.length">
               <label for="fileInput" class="file-upload"
                 >Select Image(-s)</label
@@ -92,104 +112,103 @@
 
               <div class="drop-message">or drop file(-s) here</div>
             </div>
-            <div v-else>
-              <div class="file-upload-container">
-                <div style="display: flex; gap: 10px; align-items: center">
-                  <div>Files count:</div>
-                  <strong style="font-size: 1.5em">{{filesList.length}}</strong>
-                </div>
-                <button
-                  class="submit-button"
-                  style="width: 200px"
-                  :style="loading ? 'cursor: not-allowed; padding: 0' : ''"
-                  :disabled="loading"
-                  :class="{disabled: !filesList.length || loading}"
-                  type="submit"
-                >
-                  <template v-if="loading">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      :style="loading ? 'width: 76px; height: 76px' : ''"
-                      viewBox="0 0 200 200"
-                    >
-                      <radialGradient
-                        id="a11"
-                        cx=".66"
-                        fx=".66"
-                        cy=".3125"
-                        fy=".3125"
-                        gradientTransform="scale(1.5)"
-                      >
-                        <stop offset="0" stop-color="currentColor"></stop>
-                        <stop
-                          offset=".3"
-                          stop-color="currentColor"
-                          stop-opacity=".9"
-                        ></stop>
-                        <stop
-                          offset=".6"
-                          stop-color="currentColor"
-                          stop-opacity=".6"
-                        ></stop>
-                        <stop
-                          offset=".8"
-                          stop-color="currentColor"
-                          stop-opacity=".3"
-                        ></stop>
-                        <stop
-                          offset="1"
-                          stop-color="currentColor"
-                          stop-opacity="0"
-                        ></stop>
-                      </radialGradient>
-                      <circle
-                        transform-origin="center"
-                        fill="none"
-                        stroke="url(#a11)"
-                        stroke-width="15"
-                        stroke-linecap="round"
-                        stroke-dasharray="200 1000"
-                        stroke-dashoffset="0"
-                        cx="100"
-                        cy="100"
-                        r="70"
-                      >
-                        <animateTransform
-                          type="rotate"
-                          attributeName="transform"
-                          calcMode="spline"
-                          dur="2"
-                          values="360;0"
-                          keyTimes="0;1"
-                          keySplines="0 0 1 1"
-                          repeatCount="indefinite"
-                        ></animateTransform>
-                      </circle>
-                      <circle
-                        transform-origin="center"
-                        fill="none"
-                        opacity=".2"
-                        stroke="currentColor"
-                        stroke-width="15"
-                        stroke-linecap="round"
-                        cx="100"
-                        cy="100"
-                        r="70"
-                      ></circle>
-                    </svg>
-                  </template>
-                  <template v-else> Upload </template>
-                </button>
-                <button
-                  class="clear-button"
-                  @click="clearFilesList"
-                  :disabled="loading"
-                  :class="{disabled: !filesList.length || loading}"
-                >
-                  Clear files
-                </button>
+
+            <div v-else class="file-upload-container">
+              <div style="display: flex; gap: 10px; align-items: center">
+                <div>Files count:</div>
+                <strong style="font-size: 1.5em">{{filesList.length}}</strong>
               </div>
+              <button
+                class="submit-button"
+                style="width: 200px"
+                :style="loading ? 'cursor: not-allowed; padding: 0' : ''"
+                :disabled="loading"
+                :class="{disabled: !filesList.length || loading}"
+                type="submit"
+              >
+                <template v-if="loading">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    :style="loading ? 'width: 76px; height: 76px' : ''"
+                    viewBox="0 0 200 200"
+                  >
+                    <radialGradient
+                      id="a11"
+                      cx=".66"
+                      fx=".66"
+                      cy=".3125"
+                      fy=".3125"
+                      gradientTransform="scale(1.5)"
+                    >
+                      <stop offset="0" stop-color="currentColor"></stop>
+                      <stop
+                        offset=".3"
+                        stop-color="currentColor"
+                        stop-opacity=".9"
+                      ></stop>
+                      <stop
+                        offset=".6"
+                        stop-color="currentColor"
+                        stop-opacity=".6"
+                      ></stop>
+                      <stop
+                        offset=".8"
+                        stop-color="currentColor"
+                        stop-opacity=".3"
+                      ></stop>
+                      <stop
+                        offset="1"
+                        stop-color="currentColor"
+                        stop-opacity="0"
+                      ></stop>
+                    </radialGradient>
+                    <circle
+                      transform-origin="center"
+                      fill="none"
+                      stroke="url(#a11)"
+                      stroke-width="15"
+                      stroke-linecap="round"
+                      stroke-dasharray="200 1000"
+                      stroke-dashoffset="0"
+                      cx="100"
+                      cy="100"
+                      r="70"
+                    >
+                      <animateTransform
+                        type="rotate"
+                        attributeName="transform"
+                        calcMode="spline"
+                        dur="2"
+                        values="360;0"
+                        keyTimes="0;1"
+                        keySplines="0 0 1 1"
+                        repeatCount="indefinite"
+                      ></animateTransform>
+                    </circle>
+                    <circle
+                      transform-origin="center"
+                      fill="none"
+                      opacity=".2"
+                      stroke="currentColor"
+                      stroke-width="15"
+                      stroke-linecap="round"
+                      cx="100"
+                      cy="100"
+                      r="70"
+                    ></circle>
+                  </svg>
+                </template>
+                <template v-else> Upload </template>
+              </button>
+              <button
+                class="clear-button"
+                @click="clearFilesList"
+                :disabled="loading"
+                :class="{disabled: !filesList.length || loading}"
+              >
+                Clear files
+              </button>
             </div>
           </form>
         </main>
@@ -203,7 +222,7 @@
     </div>
 
     <script>
-      const { createApp, ref } = Vue;
+      const { createApp, ref, computed } = Vue;
 
       createApp({
         setup() {
@@ -211,6 +230,33 @@
           const dropZoneIsActive = ref(false);
           const loading = ref(false);
 
+          // languages
+          const selectedLanguage = ref("eng");
+          const languageSelectIsOpen = ref(false);
+          const languages = [
+            {
+              value: "eng",
+              title: "English",
+            },
+            {
+              value: "rus",
+              title: "Russian",
+            },
+            {
+              value: "rus+eng",
+              title: "Russian + English",
+            },
+          ];
+
+          const selectedLanguageTitle = computed(() => {
+            const foundLanguage = languages.find(
+              (lang) => lang.value === selectedLanguage.value
+            );
+            if (!foundLanguage) return selectedLanguage.value;
+            return foundLanguage.title;
+          });
+
+          // files handling
           function handleSelectFiles(event) {
             const files = event.target.files;
             filesList.value = files;
@@ -225,14 +271,17 @@
             const files = dt.files;
             filesList.value = files;
             handleDropzoneActive(false);
+            languageSelectIsOpen.value = false;
           }
 
           async function handleUpload() {
             loading.value = true;
             const formData = new FormData();
-            for (let i = 0; i < filesList.value.length; i++) {
-              formData.append("fileInput", filesList.value[i]);
+            for (const file in filesList.value) {
+              formData.append("fileInput", filesList.value[file]);
             }
+
+            formData.append("language", selectedLanguage.value);
             const response = await fetch("/upload", {
               method: "POST",
               body: formData,
@@ -248,10 +297,22 @@
             filesList.value = [];
           }
 
+          function handleSelectLanguage(value) {
+            if (selectedLanguage.value === value) return;
+
+            selectedLanguage.value = value;
+            languageSelectIsOpen.value = false;
+          }
+
           return {
             filesList,
             dropZoneIsActive,
             loading,
+            selectedLanguage,
+            languages,
+            languageSelectIsOpen,
+            selectedLanguageTitle,
+            handleSelectLanguage,
             handleDropzoneActive,
             handleSelectFiles,
             handleDropFiles,

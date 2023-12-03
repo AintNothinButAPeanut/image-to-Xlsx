@@ -12,6 +12,7 @@
   --bg-color: #f5f5fa;
   --primary-color: #e5322d;
   --primary-hover-color: #bd060a;
+  --primary-color-light: #c23431;
   --secondary-color: #33333b;
   --tertiary-color: #47474f;
   --white-color: #ffffff;
@@ -68,7 +69,7 @@ li {
 }
 
 h1.title {
-  color: black;
+  color: var(--secondary-color);
   font-size: 50px;
   text-align: center;
   margin: 20px 0;
@@ -89,21 +90,24 @@ h1.title {
 
 .main-container {
   display: flex;
-  flex: 1 1;
+  flex: 1 1 100%;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  height: 500px;
+  width: 380px;
 }
 
-form {
+.form {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
 }
 
 button,
 .file-upload {
-  width: fit-content;
+  width: 100%;
   color: var(--white-color);
   background-color: var(--primary-color);
   cursor: pointer;
@@ -140,6 +144,7 @@ button.disabled,
   justify-items: center;
   align-items: center;
   gap: 12px;
+  height: 200px;
 }
 
 .drop-message {
@@ -169,7 +174,6 @@ button.disabled,
 
 .info-handler-icon {
   display: flex;
-  width: fit-content;
   width: 30px;
   height: 30px;
 }
@@ -192,4 +196,114 @@ button.disabled,
 .info-handler:hover + .info-content {
   visibility: visible;
   display: flex;
+}
+
+/* custom select */
+.custom-select {
+  position: relative;
+  width: 100%;
+  text-align: left;
+  outline: none;
+  height: 47px;
+  line-height: 47px;
+  z-index: 1;
+}
+
+.custom-select .selected {
+  background-color: var(--secondary-color);
+  border-radius: 12px;
+  border: 1px solid #666666;
+  color: #fff;
+  padding-left: 1em;
+  cursor: pointer;
+  user-select: none;
+  transition: border-radius 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  position: relative;
+}
+
+.custom-select .selected.open {
+  border: 1px solid var(--primary-color);
+  border-radius: 12px 12px 0px 0px;
+  border-bottom: transparent;
+}
+
+.custom-select .selected .arrow {
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  right: 1em;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.15s ease-in-out;
+}
+
+.custom-select .selected .arrow::after,
+.custom-select .selected .arrow::before {
+  position: absolute;
+  display: block;
+  border-radius: 50px;
+  content: "";
+  height: 10px;
+  width: 2px;
+  background-color: var(--bg-color);
+}
+.custom-select .selected .arrow::after {
+  transform: translateX(-150%) rotate(45deg);
+}
+.custom-select .selected .arrow::before {
+  transform: translateX(150%) rotate(-45deg);
+}
+
+.custom-select .selected.open .arrow {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.custom-select .items {
+  color: #fff;
+  border-radius: 0px 0px 12px 12px;
+  overflow: hidden;
+  border-right: 1px solid var(--primary-color);
+  border-left: 1px solid var(--primary-color);
+  border-bottom: 1px solid var(--primary-color);
+  position: absolute;
+  background-color: var(--secondary-color);
+  left: 0;
+  right: 0;
+  z-index: -1;
+}
+
+.custom-select .items div {
+  color: #fff;
+  padding-left: 1em;
+  cursor: pointer;
+  user-select: none;
+}
+
+.custom-select .items div:hover {
+  background-color: var(--primary-color);
+}
+
+.custom-select .items div.is-selected {
+  background-color: var(--primary-color-light);
+  border: none;
+  border-radius: 0;
+  cursor: default;
+}
+
+/* transitions */
+.slide-fade-enter-active {
+  transition: all 0.15s ease-in-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.15s ease-in-out;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10%);
 }
