@@ -1,5 +1,5 @@
 <h1>Images to .xlsx</h1> 
-<h1>http://imagestoexcel.xyz</h1>h1>
+<h1>http://imagestoexcel.xyz</h1>
 
 <h2>Intentions</h2>
 Web site was made out of inspiration for a python script my groupmate developed locally.<br>
