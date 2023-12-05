@@ -1,4 +1,6 @@
 <h1>Images to .xlsx</h1> 
+Backend - @narcissusTheFlower <br>
+Frontend - @sttshka  
 <h1>http://imagestoexcel.xyz</h1>
 
 <h2>Intentions</h2>
