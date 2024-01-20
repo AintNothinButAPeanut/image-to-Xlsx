@@ -50,7 +50,7 @@ public class ConcurrentUploadService implements UploadService {
     }
 
     private String createUploadDirectory(String dtoId) {
-        String directoryPath = new StringBuilder().append(ITE_UPLOAD_DIRECTORY).append("/ite").append(dtoId).toString();
+        String directoryPath = new StringBuilder().append(ITE_UPLOAD_DIRECTORY).append("/").append(dtoId).toString();
         if (new File(directoryPath).mkdir()) {
             logger.debug("Created new upload directory " + directoryPath + ".");
             return directoryPath;

@@ -6,6 +6,7 @@ import org.bytedeco.tesseract.TessBaseAPI;
 import org.narcissus.exceptions.ITETesseractException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,27 +19,24 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static org.bytedeco.leptonica.global.leptonica.pixDestroy;
+import static org.bytedeco.leptonica.global.leptonica.pixRead;
 
-
+@Service
 public final class Tesseract implements OpticalCharacterRecognition {
 
-    private final File directoryWithPictures;
     Logger logger = LoggerFactory.getLogger(Tesseract.class);
 
-    private Tesseract(File directoryWithPictures) {
-        this.directoryWithPictures = directoryWithPictures;
-    }
-
-    public static Tesseract of(File directoryWithPictures) {
-        return new Tesseract(directoryWithPictures);
-    }
-
     @Override
-    public void scanText() {
+    public void scanText(File directoryWithPictures) {
         int filesCount = directoryWithPictures.listFiles().length;
         CountDownLatch doneSignal = new CountDownLatch(filesCount);
         ExecutorService service = Executors.newFixedThreadPool(filesCount);
         Arrays.stream(directoryWithPictures.listFiles()).forEach(picture -> service.execute(new TesseractWorker(doneSignal, picture)));
+        try {
+            doneSignal.await();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private class TesseractWorker implements Runnable {
@@ -46,12 +44,13 @@ public final class Tesseract implements OpticalCharacterRecognition {
         private final TessBaseAPI api = new TessBaseAPI();
         private final CountDownLatch doneSignal;
         private final File picture;
+        private final String txtPath;
         private BytePointer outText;
 
         TesseractWorker(CountDownLatch doneSignal, File picture) {
             this.doneSignal = doneSignal;
             this.picture = picture;
-            this.txtPath = picture.getName().substring(0, picture.getName().lastIndexOf('.')) + ".txt";
+            this.txtPath = picture.getParent() + "/" + picture.getName().substring(0, picture.getName().lastIndexOf('.')) + ".txt";
         }
 
         @Override
@@ -59,9 +58,8 @@ public final class Tesseract implements OpticalCharacterRecognition {
             if (api.Init(System.getenv("HOME") + "/ITE", "rus+eng") != 0) {
                 throw new ITETesseractException("Failed to start Tesseract process", new RuntimeException());
             }
-            PIX image = pixRead(picturePath);
+            PIX image = pixRead(picture.getAbsolutePath());
             api.SetImage(image);
-
             outText = api.GetUTF8Text();
 
             try {

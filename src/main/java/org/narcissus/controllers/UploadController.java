@@ -33,10 +33,12 @@ public class UploadController {
     Logger logger = LoggerFactory.getLogger(UploadController.class);
     private static final String excelSheetMimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     private ConcurrentUploadService concurrentUploadService;
+    private Tesseract tesseract;
 
     @Autowired
-    public void setUploadService(ConcurrentUploadService concurrentUploadService) {
+    public void setUploadService(ConcurrentUploadService concurrentUploadService, Tesseract tesseract) {
         this.concurrentUploadService = concurrentUploadService;
+        this.tesseract = tesseract;
     }
 
     @PostMapping("/upload")
@@ -48,9 +50,14 @@ public class UploadController {
         }
         String uuid = UUID.randomUUID().toString().substring(1, 8);
 
+        //Save new pictures to disk
         Optional<String> designatedDirectory = concurrentUploadService.uploadFiles(new RequestDTO(uuid, files.stream(), files.size()));
-        designatedDirectory.ifPresent(directory -> Tesseract.of(new File(directory)).scanText());
-        PythonMapper.mapToExcel(designatedDirectory.get(), uuid);
+        //Generate .txt files for each picture
+        designatedDirectory.ifPresent(directory -> tesseract.scanText(new File(directory)));
+        //Call Python script and generate excel file
+        Thread pythonThread = new Thread();
+        pythonThread.join();
+        PythonMapper.of(designatedDirectory.get(), uuid).run();
 
         //TODO introduce environment variable for the main upload dir
         Path excelFile = Arrays.stream(new File("/home/user/ITE/uploads/" + uuid).listFiles())
@@ -65,6 +72,7 @@ public class UploadController {
 
         try {
             fileContent = Files.readAllBytes(excelFile);
+            //TODO delete whole directory instead of just 1 file
             Files.delete(excelFile);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -74,7 +82,6 @@ public class UploadController {
                 .contentType(MediaType.valueOf(excelSheetMimeType))
                 .body(fileContent);
     }
-
 
     private boolean thisRequestCompliesWithRules(Collection<MultipartFile> files) {
         //Each file must be under 5Mb size and of extension of .jpg .tiff or .png
