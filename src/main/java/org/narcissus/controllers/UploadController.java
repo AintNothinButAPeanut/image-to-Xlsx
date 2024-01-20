@@ -1,11 +1,12 @@
 package org.narcissus.controllers;
 
 import org.narcissus.DTO.RequestDTO;
-import org.narcissus.services.local.UploadService;
+import org.narcissus.services.OCR.Tesseract;
+import org.narcissus.services.python.PythonMapper;
+import org.narcissus.services.upload.ConcurrentUploadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
@@ -19,8 +20,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
@@ -28,34 +31,41 @@ import java.util.UUID;
 public class UploadController {
 
     Logger logger = LoggerFactory.getLogger(UploadController.class);
-    @Value("${ite.excelsDir}")
-    private String iteExcel;
     private static final String excelSheetMimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    private UploadService uploadService;
+    private ConcurrentUploadService concurrentUploadService;
 
     @Autowired
-    public void setUploadService(UploadService uploadService) {
-        this.uploadService = uploadService;
+    public void setUploadService(ConcurrentUploadService concurrentUploadService) {
+        this.concurrentUploadService = concurrentUploadService;
     }
 
     @PostMapping("/upload")
     public ResponseEntity<?> upload(Model model, @NonNull @RequestParam("fileInput") Collection<MultipartFile> files) {
-        logger.info("Controller '/upload' called.");
-        String uuid = UUID.randomUUID().toString().substring(1, 8);
-        try {
-            if (!files.isEmpty())
-                uploadService.uploadFiles(new RequestDTO(uuid, files, (short) files.size()));
-        } catch (IOException exception) {
-            logger.debug("Failed to upload files to the server storage.");
+        logger.info("New request with {} files", files.size());
+        if (!thisRequestCompliesWithRules(files)) {
+            //413 Payload Too Large
+            return ResponseEntity.status(413).build();
         }
+        String uuid = UUID.randomUUID().toString().substring(1, 8);
 
-//        waitForExcel();  File excelFile = Arrays.stream(Objects.requireNonNull(new File(iteExcel)   .listFiles()))  .filter(file -> file.toString().contains(uuid)).toList().get(0);
-        File excelFile = waitForExcel();
+        Optional<String> designatedDirectory = concurrentUploadService.uploadFiles(new RequestDTO(uuid, files.stream(), files.size()));
+        designatedDirectory.ifPresent(directory -> Tesseract.of(new File(directory)).scanText());
+        PythonMapper.mapToExcel(designatedDirectory.get(), uuid);
+
+        //TODO introduce environment variable for the main upload dir
+        Path excelFile = Arrays.stream(new File("/home/user/ITE/uploads/" + uuid).listFiles())
+                .toList()
+                .stream()
+                .filter(file -> file.getName().contains("xlsx"))
+                .toList()
+                .get(0)
+                .toPath();
+
         byte[] fileContent;
 
         try {
-            fileContent = Files.readAllBytes(excelFile.toPath());
-            Files.delete(excelFile.toPath());
+            fileContent = Files.readAllBytes(excelFile);
+            Files.delete(excelFile);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -65,20 +75,16 @@ public class UploadController {
                 .body(fileContent);
     }
 
-    private File waitForExcel() {
-        logger.info("Waiting for the excel file to finish generating...");
-        File dir = new File(iteExcel);
-        for (; ; ) {
-            if (dir.listFiles().length != 0) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                return dir.listFiles()[0];
-            }
+
+    private boolean thisRequestCompliesWithRules(Collection<MultipartFile> files) {
+        //Each file must be under 5Mb size and of extension of .jpg .tiff or .png
+        if (files.size() <= 100) {
+            return files.stream().anyMatch(file -> (file.getSize() < 5_242_880) & (
+                    file.getOriginalFilename().endsWith(".jpg") ||
+                            file.getOriginalFilename().endsWith(".png") ||
+                            file.getOriginalFilename().endsWith(".tiff"))
+            );
         }
+        return false;
     }
-
-
 }

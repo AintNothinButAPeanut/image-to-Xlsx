@@ -1,4 +1,4 @@
-package org.narcissus.services.OCR;
+package org.narcissus.services.python;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,19 +18,20 @@ import java.io.IOException;
 
 public final class PythonMapper {
 
-    private final ProcessBuilder pb;
+    private final static ProcessBuilder pb = new ProcessBuilder();
     private final static String linuxHome = System.getenv("HOME");
     private final static String targetDirectory = linuxHome + "/ITE/excels";
-    Logger logger = LoggerFactory.getLogger(PythonMapper.class);
+    private final static Logger logger = LoggerFactory.getLogger(PythonMapper.class);
 
-    public PythonMapper(String sourceDir, String identifier) {
+    public static synchronized void mapToExcel(String sourceDir, String identifier) {
         logger.info("Beginning processing of the directory with python script.");
-        pb = new ProcessBuilder(
+        pb.command(
                 "python3",
                 linuxHome + "/ITE/python_mapper.py",
                 sourceDir,        //arg[1] 'source'
                 targetDirectory, //arg[2] 'target'
-                identifier);    //arg[3] 'controller identifier'
+                identifier      //arg[3] 'controller identifier'
+        );
         try {
             pb.start();
         } catch (IOException e) {
