@@ -23,14 +23,10 @@ public final class PythonMapper implements Runnable {
     private final String targetDir;
     private final String identifier;
 
-    private PythonMapper(String sourceDir, String identifier) {
+    public PythonMapper(String sourceDir, String identifier) {
         this.sourceDir = sourceDir;
         this.targetDir = sourceDir; //Yes we put excel into the same directory
         this.identifier = identifier;
-    }
-
-    public static PythonMapper of(String sourceDir, String identifier) {
-        return new PythonMapper(sourceDir, identifier);
     }
 
     @Override
@@ -43,9 +39,9 @@ public final class PythonMapper implements Runnable {
                     sourceDir,        //arg[1] 'source'
                     targetDir,       //arg[2] 'target'
                     identifier      //arg[3] 'controller identifier'
-            ).start();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            ).start().waitFor();
+        } catch (IOException | InterruptedException exception) {
+            throw new RuntimeException(exception);
         }
     }
 }

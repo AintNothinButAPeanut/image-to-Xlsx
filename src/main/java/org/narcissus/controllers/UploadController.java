@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,6 +42,7 @@ public class UploadController {
         this.tesseract = tesseract;
     }
 
+    //I know it's a bad practice to write logic in controllers but considered the size of the application I find it suitable
     @PostMapping("/upload")
     public ResponseEntity<?> upload(Model model, @NonNull @RequestParam("fileInput") Collection<MultipartFile> files) {
         logger.info("New request with {} files", files.size());
@@ -55,9 +57,13 @@ public class UploadController {
         //Generate .txt files for each picture
         designatedDirectory.ifPresent(directory -> tesseract.scanText(new File(directory)));
         //Call Python script and generate excel file
-        Thread pythonThread = new Thread();
-        pythonThread.join();
-        PythonMapper.of(designatedDirectory.get(), uuid).run();
+        Thread pythonThread = new Thread(new PythonMapper(designatedDirectory.get(), uuid));
+        try {
+            pythonThread.start();
+            pythonThread.join();
+        } catch (InterruptedException exception) {
+            throw new RuntimeException(exception);
+        }
 
         //TODO introduce environment variable for the main upload dir
         Path excelFile = Arrays.stream(new File("/home/user/ITE/uploads/" + uuid).listFiles())
@@ -72,8 +78,7 @@ public class UploadController {
 
         try {
             fileContent = Files.readAllBytes(excelFile);
-            //TODO delete whole directory instead of just 1 file
-            Files.delete(excelFile);
+            FileSystemUtils.deleteRecursively(excelFile.getParent());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

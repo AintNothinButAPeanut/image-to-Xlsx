@@ -22,9 +22,7 @@ Build file structure by hand:<br>
 ```
 /home/username
             ├── /ITE
-                ├── /OCR 
                 ├── /upload 
-                ├── /excels 
                 ├── /python_mapper.py (downloaded from this repository)
                 ├── /rus.traineddata (downloaded from this repository)
                 ├── /eng.traineddata (downloaded from this repository)
@@ -35,9 +33,7 @@ These commands will do the job if run from home directory:
 
 ```
 mkdir ITE;
-mkdir ITE/OCR;
 mkdir ITE/uploads;
-mkdir ITE/excels;
 cp ~/image-to-Xlsx/python_mapper.py ~/ITE;
 cp ~/image-to-Xlsx/rus.traineddata ~/ITE;
 cp ~/image-to-Xlsx/eng.traineddata ~/ITE
@@ -163,6 +159,12 @@ Now that the preparations are complete you can run the .jar file from `~/ITE` as
 $ java -jar imageToExcel-x.x.jar 
 ```
 
+<h2> Building the .jar reminder</h2>
+Run this in console to build this project:
+
+```
+gradle build
+```
 
 
 
