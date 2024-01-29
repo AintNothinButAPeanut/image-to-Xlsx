@@ -1,327 +1,353 @@
 <!DOCTYPE html>
 <html
-  lang="en"
-  xmlns="http://www.w3.org/1999/html"
-  xmlns:th="https://www.thymeleaf.org"
+        lang="en"
+        xmlns="http://www.w3.org/1999/html"
+        xmlns:th="https://www.thymeleaf.org"
 >
-  <head>
+<head>
     <title>Image to excel</title>
-    <link th:href="@{/style.css}" rel="stylesheet" />
-    <link rel="stylesheet" th:href="@{/favicon.ico}" type="image/x-icon" />
+    <link rel="stylesheet" th:href="@{/style.css}"/>
+    <link rel="stylesheet" th:href="@{/favicon.ico}" type="image/x-icon"/>
     <!-- <link href="../static/style.css" rel="stylesheet" /> -->
     <!-- <link href="../static/favicon.png" rel="icon" /> -->
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
-  </head>
-  <body>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+</head>
+<body>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
-    <div id="app">
-      <div
-        class="container"
-        :class="{active: dropZoneIsActive}"
-        @dragenter.prevent.stop="handleDropzoneActive(true)"
-        @drop.prevent.stop="handleDropFiles"
-        @dragover.prevent.stop
-      >
+<div id="app">
+    <div
+            :class="{active: dropZoneIsActive}"
+            @dragenter.prevent.stop="handleDropzoneActive(true)"
+            @dragover.prevent.stop
+            @drop.prevent.stop="handleDropFiles"
+            class="container"
+    >
         <div
-          class="container-dropzone"
-          v-if="dropZoneIsActive"
-          @dragleave.prevent.stop="handleDropzoneActive(false)"
+                @dragleave.prevent.stop="handleDropzoneActive(false)"
+                class="container-dropzone"
+                v-if="dropZoneIsActive"
         ></div>
         <header>
-          <h1 class="title">Image(-s) to .xlsx converter</h1>
-          <div class="description">
-            Choose pictures to be transformed into a text/picture pair, put into
-            a .xlsx sheet.
-          </div>
-          <div>
-            <div class="info">
-              <div class="info-handler">
-                <div>For each request some rules are in order:</div>
-                <div class="info-handler-icon">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    x="0px"
-                    y="0px"
-                    fill="currentColor"
-                    width="100%"
-                    height="100%"
-                    viewBox="0 0 50 50"
-                  >
-                    <path
-                      d="M 25 2 C 12.309295 2 2 12.309295 2 25 C 2 37.690705 12.309295 48 25 48 C 37.690705 48 48 37.690705 48 25 C 48 12.309295 37.690705 2 25 2 z M 25 4 C 36.609824 4 46 13.390176 46 25 C 46 36.609824 36.609824 46 25 46 C 13.390176 46 4 36.609824 4 25 C 4 13.390176 13.390176 4 25 4 z M 25 11 A 3 3 0 0 0 22 14 A 3 3 0 0 0 25 17 A 3 3 0 0 0 28 14 A 3 3 0 0 0 25 11 z M 21 21 L 21 23 L 22 23 L 23 23 L 23 36 L 22 36 L 21 36 L 21 38 L 22 38 L 23 38 L 27 38 L 28 38 L 29 38 L 29 36 L 28 36 L 27 36 L 27 21 L 26 21 L 22 21 L 21 21 z"
-                    ></path>
-                  </svg>
-                </div>
-              </div>
-
-              <ul class="info-content">
-                <li>No more than <strong>100 pictures</strong> at a time</li>
-                <li>
-                  Supported extensions are: <strong>.jpg</strong>,
-                  <strong>.png</strong>, <strong>.tiff</strong>
-                </li>
-                <li>
-                  Max size of a picture in your list is
-                  <strong>5Mb</strong>
-                </li>
-              </ul>
+            <h1 class="title">Image(-s) to .xlsx converter</h1>
+            <div class="description">
+                Choose pictures to be transformed into a text/picture pair, put into
+                a .xlsx sheet.
             </div>
-          </div>
+            <div>
+                <div class="info">
+                    <div class="info-handler">
+                        <div>For each request some rules are in order:</div>
+                        <div class="info-handler-icon">
+                            <svg
+                                    fill="currentColor"
+                                    height="100%"
+                                    viewBox="0 0 50 50"
+                                    width="100%"
+                                    x="0px"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    y="0px"
+                            >
+                                <path
+                                        d="M 25 2 C 12.309295 2 2 12.309295 2 25 C 2 37.690705 12.309295 48 25 48 C 37.690705 48 48 37.690705 48 25 C 48 12.309295 37.690705 2 25 2 z M 25 4 C 36.609824 4 46 13.390176 46 25 C 46 36.609824 36.609824 46 25 46 C 13.390176 46 4 36.609824 4 25 C 4 13.390176 13.390176 4 25 4 z M 25 11 A 3 3 0 0 0 22 14 A 3 3 0 0 0 25 17 A 3 3 0 0 0 28 14 A 3 3 0 0 0 25 11 z M 21 21 L 21 23 L 22 23 L 23 23 L 23 36 L 22 36 L 21 36 L 21 38 L 22 38 L 23 38 L 27 38 L 28 38 L 29 38 L 29 36 L 28 36 L 27 36 L 27 21 L 26 21 L 22 21 L 21 21 z"
+                                ></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <ul class="info-content">
+                        <li>No more than <strong>100 pictures</strong> at a time</li>
+                        <li>
+                            Supported extensions are: <strong>.jpg</strong>,
+                            <strong>.png</strong>, <strong>.tiff</strong>
+                        </li>
+                        <li>
+                            Max size of a picture in your list is
+                            <strong>5Mb</strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </header>
         <main class="main-container">
-          <form class="form" id="picsInputForm" @submit.prevent="handleUpload">
-            <div style="display: flex; flex-direction: column; gap: 8px">
-              <div>Choose processing language</div>
-              <div class="custom-select" @blur="languageSelectIsOpen = false">
-                <div
-                  class="selected"
-                  :class="{ open: languageSelectIsOpen }"
-                  @click="languageSelectIsOpen = !languageSelectIsOpen"
-                >
-                  {{ selectedLanguageTitle }}
-                  <div class="arrow"></div>
-                </div>
-                <transition name="slide-fade">
-                  <div class="items" v-if="languageSelectIsOpen">
-                    <div
-                      v-for="(language, i) of languages"
-                      :class="{ 'is-selected': language.value === selectedLanguage }"
-                      :key="i"
-                      @click="handleSelectLanguage(language.value)"
-                    >
-                      {{ language.title }}
+            <form @submit.prevent="handleUpload" class="form" id="picsInputForm">
+                <div style="display: flex; flex-direction: column; gap: 8px">
+                    <div>Choose processing language</div>
+                    <div @blur="languageSelectIsOpen = false" class="custom-select">
+                        <div
+                                :class="{ open: languageSelectIsOpen }"
+                                @click="languageSelectIsOpen = !languageSelectIsOpen"
+                                class="selected"
+                        >
+                            {{ selectedLanguageTitle }}
+                            <div class="arrow"></div>
+                        </div>
+                        <transition name="slide-fade">
+                            <div class="items" v-if="languageSelectIsOpen">
+                                <div
+                                        :class="{ 'is-selected': language.value === selectedLanguage }"
+                                        :key="i"
+                                        @click="handleSelectLanguage(language.value)"
+                                        v-for="(language, i) of languages"
+                                >
+                                    {{ language.title }}
+                                </div>
+                            </div>
+                        </transition>
                     </div>
-                  </div>
-                </transition>
-              </div>
-            </div>
-            <div class="file-upload-container" v-if="!filesList.length">
-              <label for="fileInput" class="file-upload"
-                >Select Image(-s)</label
-              >
-              <input
-                @change="handleSelectFiles"
-                accept="image/*"
-                multiple
-                style="font-family: courier"
-                type="file"
-                id="fileInput"
-                class="fileInput"
-              />
-
-              <div class="drop-message">or drop file(-s) here</div>
-            </div>
-
-            <div v-else class="file-upload-container">
-              <div style="display: flex; gap: 10px; align-items: center">
-                <div>Files count:</div>
-                <strong style="font-size: 1.5em">{{filesList.length}}</strong>
-              </div>
-              <button
-                class="submit-button"
-                style="width: 200px"
-                :style="loading ? 'cursor: not-allowed; padding: 0' : ''"
-                :disabled="loading"
-                :class="{disabled: !filesList.length || loading}"
-                type="submit"
-              >
-                <template v-if="loading">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    :style="loading ? 'width: 76px; height: 76px' : ''"
-                    viewBox="0 0 200 200"
-                  >
-                    <radialGradient
-                      id="a11"
-                      cx=".66"
-                      fx=".66"
-                      cy=".3125"
-                      fy=".3125"
-                      gradientTransform="scale(1.5)"
+                </div>
+                <div class="file-upload-container" v-if="!filesList.length">
+                    <label class="file-upload" for="fileInput"
+                    >Select Image(-s)</label
                     >
-                      <stop offset="0" stop-color="currentColor"></stop>
-                      <stop
-                        offset=".3"
-                        stop-color="currentColor"
-                        stop-opacity=".9"
-                      ></stop>
-                      <stop
-                        offset=".6"
-                        stop-color="currentColor"
-                        stop-opacity=".6"
-                      ></stop>
-                      <stop
-                        offset=".8"
-                        stop-color="currentColor"
-                        stop-opacity=".3"
-                      ></stop>
-                      <stop
-                        offset="1"
-                        stop-color="currentColor"
-                        stop-opacity="0"
-                      ></stop>
-                    </radialGradient>
-                    <circle
-                      transform-origin="center"
-                      fill="none"
-                      stroke="url(#a11)"
-                      stroke-width="15"
-                      stroke-linecap="round"
-                      stroke-dasharray="200 1000"
-                      stroke-dashoffset="0"
-                      cx="100"
-                      cy="100"
-                      r="70"
+                    <input
+                            @change="handleSelectFiles"
+                            accept="image/*"
+                            class="fileInput"
+                            id="fileInput"
+                            multiple
+                            style="font-family: courier"
+                            type="file"
+                    />
+
+                    <div class="drop-message">or drop file(-s) here</div>
+                </div>
+
+                <div class="file-upload-container" v-else>
+                    <div style="display: flex; gap: 10px; align-items: center">
+                        <div>Files count:</div>
+                        <strong style="font-size: 1.5em">{{filesList.length}}</strong>
+                    </div>
+                    <button
+                            :class="{disabled: !filesList.length || loading}"
+                            :disabled="loading"
+                            :style="loading ? 'cursor: not-allowed; padding: 0' : ''"
+                            class="submit-button"
+                            style="width: 200px"
+                            type="submit"
                     >
-                      <animateTransform
-                        type="rotate"
-                        attributeName="transform"
-                        calcMode="spline"
-                        dur="2"
-                        values="360;0"
-                        keyTimes="0;1"
-                        keySplines="0 0 1 1"
-                        repeatCount="indefinite"
-                      ></animateTransform>
-                    </circle>
-                    <circle
-                      transform-origin="center"
-                      fill="none"
-                      opacity=".2"
-                      stroke="currentColor"
-                      stroke-width="15"
-                      stroke-linecap="round"
-                      cx="100"
-                      cy="100"
-                      r="70"
-                    ></circle>
-                  </svg>
-                </template>
-                <template v-else> Upload </template>
-              </button>
-              <button
-                class="clear-button"
-                @click="clearFilesList"
-                :disabled="loading"
-                :class="{disabled: !filesList.length || loading}"
-              >
-                Clear files
-              </button>
-            </div>
-          </form>
+                        <template v-if="loading">
+                            <svg
+                                    :style="loading ? 'width: 76px; height: 76px' : ''"
+                                    fill="currentColor"
+                                    viewBox="0 0 200 200"
+                                    xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <radialGradient
+                                        cx=".66"
+                                        cy=".3125"
+                                        fx=".66"
+                                        fy=".3125"
+                                        gradientTransform="scale(1.5)"
+                                        id="a11"
+                                >
+                                    <stop offset="0" stop-color="currentColor"></stop>
+                                    <stop
+                                            offset=".3"
+                                            stop-color="currentColor"
+                                            stop-opacity=".9"
+                                    ></stop>
+                                    <stop
+                                            offset=".6"
+                                            stop-color="currentColor"
+                                            stop-opacity=".6"
+                                    ></stop>
+                                    <stop
+                                            offset=".8"
+                                            stop-color="currentColor"
+                                            stop-opacity=".3"
+                                    ></stop>
+                                    <stop
+                                            offset="1"
+                                            stop-color="currentColor"
+                                            stop-opacity="0"
+                                    ></stop>
+                                </radialGradient>
+                                <circle
+                                        cx="100"
+                                        cy="100"
+                                        fill="none"
+                                        r="70"
+                                        stroke="url(#a11)"
+                                        stroke-dasharray="200 1000"
+                                        stroke-dashoffset="0"
+                                        stroke-linecap="round"
+                                        stroke-width="15"
+                                        transform-origin="center"
+                                >
+                                    <animateTransform
+                                            attributeName="transform"
+                                            calcMode="spline"
+                                            dur="2"
+                                            keySplines="0 0 1 1"
+                                            keyTimes="0;1"
+                                            repeatCount="indefinite"
+                                            type="rotate"
+                                            values="360;0"
+                                    ></animateTransform>
+                                </circle>
+                                <circle
+                                        cx="100"
+                                        cy="100"
+                                        fill="none"
+                                        opacity=".2"
+                                        r="70"
+                                        stroke="currentColor"
+                                        stroke-linecap="round"
+                                        stroke-width="15"
+                                        transform-origin="center"
+                                ></circle>
+                            </svg>
+                        </template>
+                        <template v-else> Upload</template>
+                    </button>
+                    <button
+                            :class="{disabled: !filesList.length || loading}"
+                            :disabled="loading"
+                            @click="clearFilesList"
+                            class="clear-button"
+                    >
+                        Clear files
+                    </button>
+                </div>
+            </form>
         </main>
         <footer class="footer">
-          Please come and see this website's source code on
-          <a href="https://github.com/narcissusTheFlower/image-to-Xlsx"
+            Please come and see this website's source code on
+            <a href="https://github.com/narcissusTheFlower/image-to-Xlsx"
             >GitHub</a
-          >
+            >
         </footer>
-      </div>
     </div>
+</div>
 
-    <script>
-      const { createApp, ref, computed } = Vue;
+<script>
+    const { createApp, ref, computed } = Vue;
 
-      createApp({
-        setup() {
-          const filesList = ref([]);
-          const dropZoneIsActive = ref(false);
-          const loading = ref(false);
+    createApp({
+      setup() {
+        const filesList = ref([]);
+        const dropZoneIsActive = ref(false);
+        const loading = ref(false);
 
-          // languages
-          const selectedLanguage = ref("eng");
-          const languageSelectIsOpen = ref(false);
-          const languages = [
-            {
-              value: "eng",
-              title: "English",
-            },
-            {
-              value: "rus",
-              title: "Russian",
-            },
-            {
-              value: "rus+eng",
-              title: "Russian + English",
-            },
-          ];
+        // languages
+        const selectedLanguage = ref("eng");
+        const languageSelectIsOpen = ref(false);
+        const languages = [
+          {
+            value: "eng",
+            title: "English",
+          },
+          {
+            value: "rus",
+            title: "Russian",
+          },
+          {
+            value: "rus+eng",
+            title: "Russian + English",
+          },
+        ];
 
-          const selectedLanguageTitle = computed(() => {
-            const foundLanguage = languages.find(
-              (lang) => lang.value === selectedLanguage.value
-            );
-            if (!foundLanguage) return selectedLanguage.value;
-            return foundLanguage.title;
-          });
+        const selectedLanguageTitle = computed(() => {
+          const foundLanguage = languages.find(
+            (lang) => lang.value === selectedLanguage.value
+          );
+          if (!foundLanguage) return selectedLanguage.value;
+          return foundLanguage.title;
+        });
 
-          // files handling
-          function handleSelectFiles(event) {
+        // files handling
+        function handleSelectFiles(event) {
             const files = event.target.files;
-            filesList.value = files;
+            if(validateFiles(files)){
+              filesList.value = files;
+              return;
+            }
+            clearFilesList();
           }
 
-          function handleDropzoneActive(value = false) {
-            dropZoneIsActive.value = value;
-          }
+        function handleDropzoneActive(value = false) {
+          dropZoneIsActive.value = value;
+        }
 
-          function handleDropFiles(event) {
+        function handleDropFiles(event) {
             const dt = event.dataTransfer;
             const files = dt.files;
-            filesList.value = files;
+            if(validateFiles(files)){
+              filesList.value = files;
+              handleDropzoneActive(false);
+              return;
+            }
             handleDropzoneActive(false);
             languageSelectIsOpen.value = false;
           }
 
-          async function handleUpload() {
-            loading.value = true;
-            const formData = new FormData();
-            for (const file in filesList.value) {
-              formData.append("fileInput", filesList.value[file]);
+        async function handleUpload() {
+          loading.value = true;
+          const formData = new FormData();
+          for (const file in filesList.value) {
+            formData.append("fileInput", filesList.value[file]);
+          }
+
+          formData.append("language", selectedLanguage.value);
+          const response = await fetch("/upload", {
+            method: "POST",
+            body: formData,
+          });
+
+          const blob = await response.blob();
+          const file = window.URL.createObjectURL(blob);
+          window.location.assign(file);
+          loading.value = false;
+          clearFilesList();
+        }
+
+        function clearFilesList() {
+          filesList.value = [];
+        }
+
+        function handleSelectLanguage(value) {
+          if (selectedLanguage.value === value) return;
+          selectedLanguage.value = value;
+          languageSelectIsOpen.value = false;
+        }
+
+        function validateFiles(incomingFiles){
+            if(incomingFiles.length < 100){
+              for (const file in incomingFiles.value) {
+              const fileExtension = file.type;
+                if(file.size > 5242880 || (fileExtension !== ".jpg" && fileExtension !== ".png" && fileExtension !== ".tiff") ){
+                  alert("One of files is bigger than 5Mb or extension of a file differs from .jpg, .png, .tiff");
+                  clearFilesList();
+                  return false;
             }
-
-            formData.append("language", selectedLanguage.value);
-            const response = await fetch("/upload", {
-              method: "POST",
-              body: formData,
-            });
-            const blob = await response.blob();
-            const file = window.URL.createObjectURL(blob);
-            window.location.assign(file);
-            loading.value = false;
-            clearFilesList();
           }
+            }else{
+              alert("Limit of 100 files is exceeded. Reduce the number of files to 100 or less.");
+              clearFilesList();
+              return false;
+            }
+        return true;
+        }
 
-          function clearFilesList() {
-            filesList.value = [];
-          }
-
-          function handleSelectLanguage(value) {
-            if (selectedLanguage.value === value) return;
-
-            selectedLanguage.value = value;
-            languageSelectIsOpen.value = false;
-          }
-
-          return {
-            filesList,
-            dropZoneIsActive,
-            loading,
-            selectedLanguage,
-            languages,
-            languageSelectIsOpen,
-            selectedLanguageTitle,
-            handleSelectLanguage,
-            handleDropzoneActive,
-            handleSelectFiles,
-            handleDropFiles,
-            clearFilesList,
-            handleUpload,
-          };
-        },
-      }).mount("#app");
-    </script>
-    <!-- <script src="../static/index.js"></script> -->
-  </body>
+        return {
+          filesList,
+          dropZoneIsActive,
+          loading,
+          selectedLanguage,
+          languages,
+          languageSelectIsOpen,
+          selectedLanguageTitle,
+          handleSelectLanguage,
+          handleDropzoneActive,
+          handleSelectFiles,
+          handleDropFiles,
+          clearFilesList,
+          handleUpload,
+        };
+      },
+    }).mount("#app");
+</script>
+<!-- <script src="../static/index.js"></script> -->
+</body>
 </html>
