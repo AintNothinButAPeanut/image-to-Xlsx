@@ -21,7 +21,7 @@
 html,
 body {
   background-color: var(--bg-color);
-  font-family: Courier;
+  font-family: Courier, monospace;
   font-size: 16px;
   color: var(--tertiary-color);
 }
@@ -114,7 +114,7 @@ button,
   font-size: 1.75em;
   border-radius: 12px;
   padding: 24px 48px;
-  transition: background-color 0.1s ease-in-out;
+  transition: all 0.1s ease-in-out;
   user-select: none;
   display: flex;
   justify-content: center;
@@ -127,15 +127,31 @@ button.disabled,
   cursor: not-allowed;
 }
 
-.submit-button:hover:not(.disabled),
-.file-upload:hover {
-  background-color: var(--primary-hover-color);
-}
-
 .clear-button {
   font-size: 1em;
   padding: 12px 24px;
   background: var(--secondary-color);
+  max-width: fit-content;
+}
+
+.submit-button:hover:not(.disabled),
+.file-upload:hover {
+  background-color: var(--primary-color-light);
+}
+
+.submit-button:active:not(.disabled),
+.file-upload:active,
+.clear-button:active {
+  transform: scale(0.98);
+}
+
+.submit-button:active:not(.disabled),
+.file-upload:active {
+  background-color: var(--primary-hover-color);
+}
+
+.clear-button:active {
+  background-color: var(--secondary-color);
 }
 
 .file-upload-container {
